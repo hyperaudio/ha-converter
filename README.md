@@ -1,4 +1,4 @@
-ha-converter
-============
+hyperaudioconverter
+===================
 
-Hyperaudio Converter
+Hyperaudio Converter - Converts from various formats into hypertranscripts.
