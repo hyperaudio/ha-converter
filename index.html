@@ -1,16 +1,64 @@
 <!DOCTYPE html>
-
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hyperaudio</title>
 
-	<title>SRT Parser</title>
 
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	
-	<script type="text/javascript">
-	$(document).ready(function(){   
+	<link rel="stylesheet" type="text/css" href="css/hyperaudio.transcript.css" />
+	<link rel="stylesheet" type="text/css" href="css/hyperaudio.player.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<style>
+	.instructions {
+		margin-top: 64px;
+		padding: 16px;
+		font-size: 1.3em;
+		line-height: 2em;
+		width: 440px;
+	}
+
+	#stage {
+		top: 240px;
+		padding: 4px;
+	}
+
+	#out-inst {
+		position: absolute;
+		right: 0;
+		top: 55px;
+		padding: 1em;
+		width: 50%;
+		height: 100%;
+		overflow: auto;
+		border-left: 2px solid #ccc;
+	}
+
+	#transform {
+		float:right;
+	}
+
+	textarea { padding: 10px; outline: 2px dashed #CCC; border: none;margin-top:10px;}
+  textarea:hover { outline: 2px dashed #0090D2; border: none;}
+
+  #header {
+		background: #9000D2;
+	}
+
+	#save-button {
+		background: #6000B2;
+	}
+	</style>
+
+<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="build/hyperaudio-pad-testbed.js"></script>
+<!-- temp jQuery include for dev speed - MB -->
+<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
 		
 		// stolen wholesale from popcorn.parserSRT.js
 		
@@ -163,47 +211,47 @@
 		
 		
 	});
-	
-	</script> 
-	
+</script>
 </head>
+
 <body>
-<div id="container">
-	<div id="header" class="clearfix">
-		<div id="title"> 
 
-			<h1>SRT to Hypertranscript</h1>
+<div id="wrapper">
+	<div id="instructions">
+		<header id="header">
+			<h1>Hyperaudio Converter</h1>
 
-		</div><!--END #title-->
-	</div><!--END #header-->
-	
-	<div id="content">
-    <div id="sidebar">   
+			<div id="save-button">6</div>
+		</header>
 
-            
-			<p>Paste your SRT file into the SRT pane <br/>and press the transform button below.</p>
+		<div class="instructions" >
+			<div id="in-inst">
+				<h2 id="srt-title" class="entry-title">SRT  ⤵</h2>
+				<p>Paste your SRT file into the SRT pane and press the transform button below.</p>
 
-			<form>
-				<p>
-					<input id="line-breaks" type="checkbox" name="linebreaks" value="on">Line breaks?
-					<input id="word-length" type="checkbox" name="wordlength" value="on">Take word-length into account?
-				</p>
-			</form>
-			<a id="transform" href="#">Transform</a>  
-			
-    </div><!-- end #sidebar -->    
+				
+			</div>
+			<div id="out-inst">
+				<h2 id="script-title" class="entry-title">Hypertranscript  ⤵</h2>
+				<form>
+					<p>
+						<input id="line-breaks" type="checkbox" name="linebreaks" value="on">Line breaks?<br/>
+						<input id="word-length" type="checkbox" name="wordlength" value="on">Take word-length into account?
+					</p>
+				</form>
+				<a id="transform" href="#">Transform</a>
+			</div>
+		</div>
+	</div>
 
-    <h2 id="script-title" class="entry-title">SRT  ⤵</h2>
-                    
-		<div id="original-hldr" style="background-color:#fff">
-			<textarea id="subtitles" class="entry-content" rows="40" cols="60"></textarea>
-    </div>
 
-    <h2 id="script-title" class="entry-title">Hypertranscript  ⤵</h2>
+	<textarea id="subtitles" class="entry-content" rows="40" cols="59"></textarea>
 
+	<div id="stage">
 		<div id="htranscript-hldr" style="background-color:#fff">
-			<textarea id="htranscript" class="entry-content" rows="40" cols="60"></textarea>
-    </div> 
-	</div><!-- end #content -->
-</div><!-- end #container -->
+			<textarea id="htranscript" class="entry-content" rows="40" cols="58"></textarea>
+		</div> 
+	</div>
+</div>
+</body>
 </html>
