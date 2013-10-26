@@ -253,5 +253,109 @@ $(document).ready(function(){
 		</div> 
 	</div>
 </div>
+
+<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+<!-- <script type="text/javascript" src="js/utility.xhr.js"></script> -->
+<script type="text/javascript" src="lib/purl.js"></script>
+
+<script>
+var mediaObject;
+var mediaID = purl(document.location.href).param('m');
+
+$.get('http://data.hyperaud.io/media/' + mediaID, function(m) {
+  mediaObject = m;
+  console.log(m);
+  // var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
+  //   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
+  //   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+});
+
+var user;
+function whoami(callback) {
+  $.ajax('http://data.hyperaud.io/whoami', {
+    type: "GET",
+   contentType: "application/json; charset=utf-8",
+   success: function(whoami) {
+      if (whoami.user) {
+        // logged in
+        // alert('logged in');
+        user = whoami.user;
+      } else {
+        // not logged in
+        // alert('NOT logged in');
+        user = null;
+      }
+      if (callback) callback();
+    },
+    xhrFields: {
+      withCredentials: true
+    },
+      crossDomain: true 
+  });
+}
+
+var transcriptObject = null;
+$('#save-button').click(function() {
+  whoami(function() {
+    if (user && user.username) {
+      //
+      if (transcriptObject) {
+          $.ajax( 'http://data.hyperaud.io/' + user.username + '/transcripts/' + transcriptObject._id, {
+            type: "PUT",
+            data: {
+              _id: transcriptObject._id,
+              label:  'Transcript for ' + mediaObject.label,
+              type: 'html',
+              sort: 0,
+              owner: user.username,
+              content: $('#htranscript').val(),
+              media: mediaID
+            },
+            success: function(data) {
+              transcriptObject = data;
+              console.log(data);
+              alert('Saved!');
+            },
+            error: function() {
+              alert('Save Error');
+            },
+            xhrFields: {
+              withCredentials: true
+            },
+            crossDomain: true
+          });
+      } else {
+        $.ajax( 'http://data.hyperaud.io/' + user.username + '/transcripts', {
+          type: "POST",
+          data: {
+            label:  'Transcript for ' + mediaObject.label,
+            type: 'html',
+            sort: 0,
+            owner: user.username,
+            content: $('#htranscript').val(),
+            media: mediaID
+          },
+          success: function(data) {
+            transcriptObject = data;
+            console.log(data);
+            alert('Created!');
+          },
+          error: function() {
+            alert('Save Error');
+          },
+          xhrFields: {
+            withCredentials: true
+          },
+          crossDomain: true
+        });
+      }
+      //
+    } else {
+      alert('not logged in');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
