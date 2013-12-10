@@ -262,7 +262,7 @@ $(document).ready(function(){
 var mediaObject;
 var mediaID = purl(document.location.href).param('m');
 
-$.get('http://data.hyperaud.io/media/' + mediaID, function(m) {
+$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
   mediaObject = m;
   console.log(m);
   // var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
@@ -272,7 +272,7 @@ $.get('http://data.hyperaud.io/media/' + mediaID, function(m) {
 
 var user;
 function whoami(callback) {
-  $.ajax('http://data.hyperaud.io/whoami', {
+  $.ajax('http://api.hyperaud.io/whoami', {
     type: "GET",
    contentType: "application/json; charset=utf-8",
    success: function(whoami) {
@@ -300,7 +300,7 @@ $('#save-button').click(function() {
     if (user && user.username) {
       //
       if (transcriptObject) {
-          $.ajax( 'http://data.hyperaud.io/' + user.username + '/transcripts/' + transcriptObject._id, {
+          $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts/' + transcriptObject._id, {
             type: "PUT",
             data: {
               _id: transcriptObject._id,
@@ -325,7 +325,7 @@ $('#save-button').click(function() {
             crossDomain: true
           });
       } else {
-        $.ajax( 'http://data.hyperaud.io/' + user.username + '/transcripts', {
+        $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts', {
           type: "POST",
           data: {
             label:  'Transcript for ' + mediaObject.label,
