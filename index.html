@@ -53,7 +53,6 @@
 	</style>
 
 <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-<script type="text/javascript" src="build/hyperaudio-pad-testbed.js"></script>
 <!-- temp jQuery include for dev speed - MB -->
 <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
 
@@ -111,7 +110,14 @@ $(document).ready(function(){
 	      sub.id = parseInt( lines[i++], 10 );
 
 	      // Split on '-->' delimiter, trimming spaces as well
-	      time = lines[i++].split( /[\t ]*-->[\t ]*/ );
+
+	      try {
+   				time = lines[i++].split( /[\t ]*-->[\t ]*/ );
+				}
+				catch (e) {
+					alert("not a valid SRT file");
+   				break;
+				}
 
 	      sub.start = toSeconds( time[0] );
 
@@ -207,6 +213,7 @@ $(document).ready(function(){
 			  
 			$('#htranscript').val(ht); 
 			//console.log($('#subtitles').text());
+			return false;
 		});
 		
 		
@@ -262,13 +269,18 @@ $(document).ready(function(){
 var mediaObject;
 var mediaID = purl(document.location.href).param('m');
 
-$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
-  mediaObject = m;
-  console.log(m);
-  // var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
-  //   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
-  //   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
-});
+// MB adding check to see if param is present
+
+if (mediaID) {
+	$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
+  	mediaObject = m;
+  	console.log(m);
+  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
+  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
+  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+	});
+}
+
 
 var user;
 function whoami(callback) {
