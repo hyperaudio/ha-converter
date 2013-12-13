@@ -1,63 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-
-<title>Hyperaudio</title>
-
-
-	<link rel="stylesheet" type="text/css" href="css/hyperaudio.transcript.css" />
-	<link rel="stylesheet" type="text/css" href="css/hyperaudio.player.css" />
+<head>
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+	<style type="text/css">
+		.wrapper {
+			width: 980px; 
+			background: #ffffff;
+			margin: 0 auto; 
+		}
 
-	<style>
-	.instructions {
-		margin-top: 64px;
-		padding: 16px;
-		font-size: 1.3em;
-		line-height: 2em;
-		width: 440px;
-	}
+		.header {
+			background: black; 
+			color: white; 
+		}
 
-	#stage {
-		top: 240px;
-		padding: 4px;
-	}
+		.holder {
+			margin-top: 50px;
+			width: 50%; 
+			float: left;
+			background: #ffffff;
+		}
 
-	#out-inst {
-		position: absolute;
-		right: 0;
-		top: 55px;
-		padding: 1em;
-		width: 50%;
-		height: 100%;
-		overflow: auto;
-		border-left: 2px solid #ccc;
-	}
+		.instructions {
+			padding: 10px;
+			height: 160px;
+			font-size: 16px;
+			line-height: 24px;
+		}
 
-	#transform {
-		float:right;
-	}
+		.footer {
+			height: 10px;
+			background: #ffffff;
+			clear: both; 
+		}
 
-	textarea { padding: 10px; outline: 2px dashed #CCC; border: none;margin-top:10px;}
-  textarea:hover { outline: 2px dashed #0090D2; border: none;}
+		textarea { 
+			margin-left:10px;
+			padding: 10px; 
+			outline: 2px dashed #CCC; 
+			border: none;margin-top:10px;
+		}
 
-  #header {
-		background: #9000D2;
-	}
+		textarea:hover { 
+			outline: 2px dashed #0090D2; 
+			border: none;
+		}
+		
+		#header {
+			background: #9000D2;
+		}
 
-	#save-button {
-		background: #6000B2;
-	}
+		#save-button {
+			background: #6000B2;
+		}
 	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
 
-<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-<!-- temp jQuery include for dev speed - MB -->
-<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){
+	<script type="text/javascript">
+		$(document).ready(function(){
 		
 		// stolen wholesale from popcorn.parserSRT.js
 		
@@ -90,10 +93,10 @@ $(document).ready(function(){
 	      }
 	    };
 
-
-
       var outputString = "<article><header></header><section><header></header><p>";
       var lineBreaks = $('#line-breaks').prop('checked');
+      var ltime = 0;
+      var ltext;
 
 	    // Here is where the magic happens
 	    // Split on line breaks
@@ -171,6 +174,7 @@ $(document).ready(function(){
         var letterTime = sduration / totalLetters;
         var wordStart = 0;
         
+        
         for (var si=0, sl=swords.length; si<sl; ++si) {
         	var wordTime = swordLengths[si]*letterTime;
         	var stime;
@@ -184,7 +188,24 @@ $(document).ready(function(){
           var stext = swords[si];
           //var ssafeText = stext.replace('"', '\\"');
           //outputString += '<span m="'+stime+'" oval="'+ssafeText+'">'+stext+'</span> '+'\n';
+          
+          console.log("stime");
+          console.log(stime);
+          console.log("ltime");
+          console.log(ltime);
+          console.log("diff");
+          console.log(stime - ltime);
+          if ((stime - ltime) > 800)  {
+          	console.log("fullstop? "+stext+" - "+stext.indexOf("."));
+						if (ltext.indexOf(".") > 0) {
+          		outputString += '</p><p>';
+          	}
+          }
+
           outputString += '<a data-m="'+stime+'">'+stext+' </a>';
+
+          ltime = stime;
+          ltext = stext;
 
           if (lineBreaks) outputString = outputString + '\n';
         }
@@ -219,53 +240,51 @@ $(document).ready(function(){
 		
 		
 	});
-</script>
-</head>
+	</script>
 
+</head>
 <body>
 
 <div id="wrapper">
-	<div id="instructions">
-		<header id="header">
-			<h1>Hyperaudio Converter</h1>
 
-			<div id="save-button">6</div>
-		</header>
+	<header id="header">
+		<h1>Hyperaudio Converter</h1>
+		<div id="save-button">6</div>
+	</header>
 
-		<div class="instructions" >
-			<div id="in-inst">
-				<h2 id="srt-title" class="entry-title">SRT  ⤵</h2>
-				<p>Paste your SRT file into the SRT pane and press the transform button below.</p>
+	<div class="holder">
+		<div class="instructions">
+			<h2 id="srt-title" class="entry-title">SRT  ⤵</h2>
+			<p>Paste your SRT file into the SRT pane and press the transform button below.</p>
+			<a id="transform" href="#">Transform</a>
+		</div>
 
-				
-			</div>
-			<div id="out-inst">
-				<h2 id="script-title" class="entry-title">Hypertranscript  ⤵</h2>
-				<form>
-					<p>
-						<input id="line-breaks" type="checkbox" name="linebreaks" value="on">Line breaks?<br/>
-						<input id="word-length" type="checkbox" name="wordlength" value="on">Take word-length into account?
-					</p>
-				</form>
-				<a id="transform" href="#">Transform</a>
-			</div>
+		<div class="source-content">
+			<textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
 		</div>
 	</div>
 
+	<div class="holder">
+		<div class="instructions">
+			<h2 id="script-title" class="entry-title">Hypertranscript  ⤵</h2>
+				<form>
+					<p>
+						<input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks?<br/>
+						<input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?
+					</p>
+				</form>
+				
+		</div>
+		<div class="target-content">
+			<textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
+		</div>
+	</div>
 
-	<textarea id="subtitles" class="entry-content" rows="40" cols="59"></textarea>
-
-	<div id="stage">
-		<div id="htranscript-hldr" style="background-color:#fff">
-			<textarea id="htranscript" class="entry-content" rows="40" cols="58"></textarea>
-		</div> 
+	<div class="footer">
 	</div>
 </div>
 
-<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
-<!-- <script type="text/javascript" src="js/utility.xhr.js"></script> -->
 <script type="text/javascript" src="lib/purl.js"></script>
-
 <script>
 var mediaObject;
 var mediaID = purl(document.location.href).param('m');
@@ -369,6 +388,5 @@ $('#save-button').click(function() {
   });
 });
 </script>
-
 </body>
 </html>
