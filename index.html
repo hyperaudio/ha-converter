@@ -26,7 +26,7 @@
 
 		.instructions {
 			padding: 10px;
-			height: 390px;
+			height: 310px;
 			font-size: 16px;
 			line-height: 24px;
 		}
@@ -323,7 +323,10 @@
 		<div class="instructions">
 			<h2 id="srt-title" class="entry-title">SRT  ⤵</h2>
 			<p>Paste your SRT file into the SRT pane and press the transform button below.</p>
-			
+			<form>
+				<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks?</p>
+						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
+			</form>
 		</div>
 
 		<div class="source-content">
@@ -335,9 +338,6 @@
 		<div class="instructions">
 			<h2 id="script-title" class="entry-title">Hypertranscript  ⤵</h2>
 				<form class="controls">
-						<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks?</p>
-						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
-
 						<p>Paragraph split on delay:</p>
 						<p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
 						<span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
