@@ -406,14 +406,16 @@ $('#save-button').click(function() {
       if (transcriptObject) {
           $.ajax( 'http://api.hyperaud.io/v1/' + user + '/transcripts/' + transcriptObject._id, {
             type: "PUT",
-            data: {
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
               _id: transcriptObject._id,
               label:  'Transcript for ' + mediaObject.label,
               type: 'html',
               owner: user,
               content: $('#htranscript').val(),
               media: mediaID
-            },
+            }),
             success: function(data) {
               transcriptObject = data;
               console.log(data);
@@ -430,13 +432,15 @@ $('#save-button').click(function() {
       } else {
         $.ajax( 'http://api.hyperaud.io/v1/' + user + '/transcripts', {
           type: "POST",
-          data: {
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data: JSON.stringify({
             label:  'Transcript for ' + mediaObject.label,
             type: 'html',
             owner: user,
             content: $('#htranscript').val(),
             media: mediaID
-          },
+          }),
           success: function(data) {
             transcriptObject = data;
             console.log(data);
