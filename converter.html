@@ -342,7 +342,7 @@
 		</div>
 
 		<div class="source-content">
-			<textarea id="subtitles" class="entry-content" rows="30" cols="54"></textarea>
+			<textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
 		</div>
 	</div>
 
@@ -360,7 +360,7 @@
 				<a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
 		</div>
 		<div class="target-content">
-			<textarea id="htranscript" class="entry-content" rows="30" cols="54"></textarea>
+			<textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
 			<div style="display:none" id="rtranscript"></div>
 		</div>
 	</div>
@@ -372,9 +372,13 @@
 <script type="text/javascript" src="lib/purl.js"></script>
 <script>
 var mediaObject;
-var mediaID = purl(document.location.href).param('m');
+var mediaID = purl(window.top.document.location.href).param('m');
 
 // MB adding check to see if param is present
+
+console.log("checking for presence of param");
+console.log(document.location.href);
+console.log(window.top.document.location.href);
 
 if (mediaID) {
 	$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
