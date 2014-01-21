@@ -53,6 +53,7 @@
     for (var i = 0; i < anchors.length; i++) {
         anchors[i].setAttribute('target', '_top');
         anchors[i].addEventListener("click", warning, false);
+        anchors[i].addEventListener("touchstart", warning, false);
     }
 
     function warning(e) {
