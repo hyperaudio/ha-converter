@@ -114,7 +114,8 @@
 			return false;
 		});
 
-		$('#rendered-view').click(function(){
+		$('#rendered-view').click(function(){ 
+			$('#rtranscript').html($('#htranscript').val());
 			$('#markup-view').addClass('inactive');
 			$(this).removeClass('inactive');
 			$('#htranscript').hide();
