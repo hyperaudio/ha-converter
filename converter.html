@@ -358,111 +358,118 @@
 </div>
 
 <script type="text/javascript" src="lib/purl.js"></script>
-<script>
-var mediaObject;
-var mediaID = purl(window.top.document.location.href).param('m');
+<script type="text/javascript">
 
-// MB adding check to see if param is present
+$(document).ready(function() {
 
-console.log("checking for presence of param");
-console.log(document.location.href);
-console.log(window.top.document.location.href);
+	var API = 'http://api.hyperaud.io/v1';
 
-if (mediaID) {
-	$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
-  	mediaObject = m;
-  	console.log(m);
-  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
-  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
-  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+	var mediaObject;
+	var mediaID = purl(window.top.document.location.href).param('m');
+
+	// MB adding check to see if param is present
+
+	console.log("checking for presence of param");
+	console.log(document.location.href);
+	console.log(window.top.document.location.href);
+
+	if (mediaID) {
+		$.get(API + '/media/' + mediaID, function(m) {
+	  	mediaObject = m;
+	  	console.log(m);
+	  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
+	  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
+	  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+		});
+	}
+
+	
+
+	var user;
+	function whoami(callback) {
+	  $.ajax(API+'/whoami', {
+	    type: "GET",
+	   contentType: "application/json; charset=utf-8",
+	   success: function(whoami) {
+	      if (whoami.user) {
+	        // logged in
+	        // alert('logged in');
+	        user = whoami.user;
+	      } else {
+	        // not logged in
+	        // alert('NOT logged in');
+	        user = null;
+	      }
+	      if (callback) callback();
+	    },
+	    xhrFields: {
+	      withCredentials: true
+	    },
+	      crossDomain: true 
+	  });
+	}
+
+	var transcriptObject = null;
+	$('#save-button').click(function() {
+	  whoami(function() {
+	    if (user && user.username) {
+	      //
+	      if (transcriptObject) {
+	          $.ajax( API+'/' + user.username + '/transcripts/' + transcriptObject._id, {
+	            type: "PUT",
+	            data: {
+	              _id: transcriptObject._id,
+	              label:  'Transcript for ' + mediaObject.label,
+	              type: 'html',
+	              sort: 0,
+	              owner: user.username,
+	              content: $('#htranscript').val(),
+	              media: mediaID
+	            },
+	            success: function(data) {
+	              transcriptObject = data;
+	              console.log(data);
+	              alert('Saved!');
+	            },
+	            error: function() {
+	              alert('Save Error');
+	            },
+	            xhrFields: {
+	              withCredentials: true
+	            },
+	            crossDomain: true
+	          });
+	      } else {
+	        $.ajax( API+'/' + user.username + '/transcripts', {
+	          type: "POST",
+	          data: {
+	            label:  'Transcript for ' + mediaObject.label,
+	            type: 'html',
+	            sort: 0,
+	            owner: user.username,
+	            content: $('#htranscript').val(),
+	            media: mediaID
+	          },
+	          success: function(data) {
+	            transcriptObject = data;
+	            console.log(data);
+	            alert('Created!');
+	          },
+	          error: function() {
+	            alert('Save Error');
+	          },
+	          xhrFields: {
+	            withCredentials: true
+	          },
+	          crossDomain: true
+	        });
+	      }
+	      //
+	    } else {
+	      alert('Please sign in to save.');
+	    }
+	  });
 	});
-}
-
-
-var user;
-function whoami(callback) {
-  $.ajax('http://api.hyperaud.io/whoami', {
-    type: "GET",
-   contentType: "application/json; charset=utf-8",
-   success: function(whoami) {
-      if (whoami.user) {
-        // logged in
-        // alert('logged in');
-        user = whoami.user;
-      } else {
-        // not logged in
-        // alert('NOT logged in');
-        user = null;
-      }
-      if (callback) callback();
-    },
-    xhrFields: {
-      withCredentials: true
-    },
-      crossDomain: true 
-  });
-}
-
-var transcriptObject = null;
-$('#save-button').click(function() {
-  whoami(function() {
-    if (user && user.username) {
-      //
-      if (transcriptObject) {
-          $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts/' + transcriptObject._id, {
-            type: "PUT",
-            data: {
-              _id: transcriptObject._id,
-              label:  'Transcript for ' + mediaObject.label,
-              type: 'html',
-              sort: 0,
-              owner: user.username,
-              content: $('#htranscript').val(),
-              media: mediaID
-            },
-            success: function(data) {
-              transcriptObject = data;
-              console.log(data);
-              alert('Saved!');
-            },
-            error: function() {
-              alert('Save Error');
-            },
-            xhrFields: {
-              withCredentials: true
-            },
-            crossDomain: true
-          });
-      } else {
-        $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts', {
-          type: "POST",
-          data: {
-            label:  'Transcript for ' + mediaObject.label,
-            type: 'html',
-            sort: 0,
-            owner: user.username,
-            content: $('#htranscript').val(),
-            media: mediaID
-          },
-          success: function(data) {
-            transcriptObject = data;
-            console.log(data);
-            alert('Created!');
-          },
-          error: function() {
-            alert('Save Error');
-          },
-          xhrFields: {
-            withCredentials: true
-          },
-          crossDomain: true
-        });
-      }
-      //
-    } else {
-      alert('not logged in');
-    }
-  });
 });
 </script>
 </body>
