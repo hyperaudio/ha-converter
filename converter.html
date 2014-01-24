@@ -473,9 +473,12 @@ $(document).ready(function() {
 	          success: function(data) {
 	            transcriptObject = data;
 	            console.log(data);
-	            alert('Created!');
+	            $('#save-button-saving').hide();
+							$('#save-button').show();
 	          },
 	          error: function() {
+	          	$('#save-button-saving').hide();
+							$('#save-button').show();
 	            alert('Save Error');
 	          },
 	          xhrFields: {
