@@ -436,7 +436,7 @@ $(document).ready(function() {
 	            type: "PUT",
 	            data: {
 	              _id: transcriptObject._id,
-	              label:  'Transcript for ' + mediaObject.label,
+	              label:  mediaObject.label,
 	              type: 'html',
 	              sort: 0,
 	              owner: user.username,
@@ -463,7 +463,7 @@ $(document).ready(function() {
 	        $.ajax( API+'/' + user + '/transcripts', {
 	          type: "POST",
 	          data: {
-	            label:  'Transcript for ' + mediaObject.label,
+	            label:  mediaObject.label,
 	            type: 'html',
 	            sort: 0,
 	            owner: user,
