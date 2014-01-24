@@ -91,6 +91,19 @@
 			height: 500px;
 		}
 
+		#save-button-saving {
+			width: 48px;
+			height: 48px;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background-color: #808080;
+			background-image: url('/pad/images/ajax-loader-ffffff-on-808080.gif');
+			background-position: center center;
+			background-repeat: no-repeat;
+			display:none;
+		}
+
 	</style>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
 
@@ -315,6 +328,7 @@
 	<header id="header">
 		<h1>Hyperaudio Converter</h1>
 		<div id="save-button">6</div>
+		<div id="save-button-saving"></div>
 	</header>
 
 	<div class="holder">
@@ -411,6 +425,8 @@ $(document).ready(function() {
 
 	var transcriptObject = null;
 	$('#save-button').click(function() {
+		$('#save-button').hide();
+		$('#save-button-saving').show();
 	  whoami(function() {
 	  	console.dir(user);
 	    if (user) {
@@ -430,9 +446,12 @@ $(document).ready(function() {
 	            success: function(data) {
 	              transcriptObject = data;
 	              console.log(data);
-	              alert('Saved!');
+	              $('#save-button-saving').hide();
+								$('#save-button').show();
 	            },
 	            error: function() {
+	            	$('#save-button-saving').hide();
+								$('#save-button').show();
 	              alert('Save Error');
 	            },
 	            xhrFields: {
