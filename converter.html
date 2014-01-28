@@ -270,10 +270,11 @@
           console.log(ltime);
           console.log("diff");
           console.log(stime - ltime);
+          console.log(ltext);
 
           if (((stime - ltime) > paraSplitTime * 1000) && paraSplitTime > 0)  {
           	console.log("fullstop? "+stext+" - "+stext.indexOf("."));
-          	var punctPresent = ltext.indexOf(".") > 0 || ltext.indexOf("?") > 0 || ltext.indexOf("!") > 0;
+          	var punctPresent = ltext && (ltext.indexOf(".") > 0 || ltext.indexOf("?") > 0 || ltext.indexOf("!") > 0;
 						if (!paraPunct || (paraPunct && punctPresent)) {
           		outputString += '</p><p>';
           	}
@@ -337,7 +338,7 @@
 			<h2>Convert your subtitles into a hypertranscript.</h2>
 			<p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
 			<form>
-				<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks?</p>
+				<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>
 						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
 			</form>
 			<h3 id="srt-title" class="entry-title">SRT (subtitles go here) ⤵</h3>
