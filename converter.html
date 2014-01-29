@@ -71,7 +71,7 @@
 		#transform {
 			font-size: 24px;
 			font-weight: bold;
-			margin-left: 330px;
+			margin-left: 310px;
 			border: solid;
 			border-width:2px;
 			padding: 8px;
@@ -264,16 +264,16 @@
           //var ssafeText = stext.replace('"', '\\"');
           //outputString += '<span m="'+stime+'" oval="'+ssafeText+'">'+stext+'</span> '+'\n';
           
-          console.log("stime");
+          /*console.log("stime");
           console.log(stime);
           console.log("ltime");
           console.log(ltime);
           console.log("diff");
           console.log(stime - ltime);
-          console.log(ltext);
+          console.log(ltext);*/
 
           if (((stime - ltime) > paraSplitTime * 1000) && paraSplitTime > 0)  {
-          	console.log("fullstop? "+stext+" - "+stext.indexOf("."));
+          	//console.log("fullstop? "+stext+" - "+stext.indexOf("."));
           	var punctPresent = ltext && (ltext.indexOf(".") > 0 || ltext.indexOf("?") > 0 || ltext.indexOf("!") > 0);
 						if (!paraPunct || (paraPunct && punctPresent)) {
           		outputString += '</p><p>';
@@ -300,6 +300,8 @@
 		});*/
 		
 		$('#transform').click(function() {
+
+			$('.transform-spinner').show();
 			
 			var srt = $('#subtitles').val();
 			/*var regex = /<br\s*[\/]?>/gi;
@@ -314,6 +316,8 @@
 			$('#htranscript').val(ht); 
 			$('#rtranscript').html(ht);
 			//console.log($('#subtitles').text());
+
+			$('.transform-spinner').hide();
 			return false;
 		});
 		
@@ -338,10 +342,10 @@
 			<h2>Convert your subtitles into a hypertranscript.</h2>
 			<p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
 			<form>
-				<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>
+				<!--<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>-->
 						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
 			</form>
-			<h3 id="srt-title" class="entry-title">SRT (subtitles go here) ⤵</h3>
+			<h3 id="srt-title" class="entry-title">Paste SRT formatted subtitles here ⤵</h3>
 		</div>
 
 		<div class="source-content">
@@ -358,7 +362,7 @@
 						<span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
 						<p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
 				</form>
-				<p><a id="transform" href="#">Transform</a></p>
+				<p><a id="transform" href="#">Transform <img class="transform-spinner" style="display:none" src="/pad/images/ajax-loader-ffffff-on-808080.gif"></a></p>
 				<h3 id="script-title" class="entry-title">hypertranscript appears here ⤵</h3>
 				<a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
 		</div>
@@ -384,14 +388,14 @@ $(document).ready(function() {
 
 	// MB adding check to see if param is present
 
-	console.log("checking for presence of param");
+	/*console.log("checking for presence of param");
 	console.log(document.location.href);
-	console.log(window.top.document.location.href);
+	console.log(window.top.document.location.href);*/
 
 	if (mediaID) {
 		$.get(API + '/media/' + mediaID, function(m) {
 	  	mediaObject = m;
-	  	console.log(m);
+	  	//console.log(m);
 	  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
 	  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
 	  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
@@ -446,7 +450,7 @@ $(document).ready(function() {
 	            },
 	            success: function(data) {
 	              transcriptObject = data;
-	              console.log(data);
+	              //console.log(data);
 	              $('#save-button-saving').hide();
 								$('#save-button').show();
 	            },
@@ -473,7 +477,7 @@ $(document).ready(function() {
 	          },
 	          success: function(data) {
 	            transcriptObject = data;
-	            console.log(data);
+	            //console.log(data);
 	            $('#save-button-saving').hide();
 							$('#save-button').show();
 	          },
