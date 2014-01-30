@@ -112,7 +112,7 @@ p {
 	min-width: 768px;
 	margin: 0 auto;
 	background: #fff;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 #header {
