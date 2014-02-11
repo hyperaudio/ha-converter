@@ -3,160 +3,160 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <head>
-	<!--<link rel="stylesheet" type="text/css" href="css/main.css" />-->
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-	<style type="text/css">
-		.wrapper {
-			width: 980px; 
-			background: #ffffff;
-			margin: 0 auto; 
-		}
+  <!--<link rel="stylesheet" type="text/css" href="css/main.css" />-->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+    .wrapper {
+      width: 980px; 
+      background: #ffffff;
+      margin: 0 auto; 
+    }
 
-		.header {
-			background: black; 
-			color: white; 
-		}
+    .header {
+      background: black; 
+      color: white; 
+    }
 
-		.holder {
-			margin-top: 50px;
-			width: 50%; 
-			float: left;
-			background: #ffffff;
-		}
+    .holder {
+      margin-top: 50px;
+      width: 50%; 
+      float: left;
+      background: #ffffff;
+    }
 
-		.instructions {
-			padding: 10px;
-			height: 310px;
-			font-size: 16px;
-			line-height: 24px;
-		}
+    .instructions {
+      padding: 10px;
+      height: 310px;
+      font-size: 16px;
+      line-height: 24px;
+    }
 
-		.footer {
-			height: 10px;
-			background: #ffffff;
-			clear: both; 
-		}
+    .footer {
+      height: 10px;
+      background: #ffffff;
+      clear: both; 
+    }
 
-		textarea, #rtranscript { 
-			margin-left:10px;
-			padding: 10px; 
-			outline: 2px dashed #2c3e50; 
-			border: none;margin-top:10px;
-		}
+    textarea, #rtranscript { 
+      margin-left:10px;
+      padding: 10px; 
+      outline: 2px dashed #2c3e50; 
+      border: none;margin-top:10px;
+    }
 
-		textarea:hover { 
-			outline: 2px dashed #2c3e50; 
-			border: none;
-		}
-		
-		.tab {
-			border: solid;
-			border-width:1px;
-			border-bottom:thick dotted #ffffff;
-			text-decoration: none;
-			padding: 4px;
-		}
+    textarea:hover { 
+      outline: 2px dashed #2c3e50; 
+      border: none;
+    }
+    
+    .tab {
+      border: solid;
+      border-width:1px;
+      border-bottom:thick dotted #ffffff;
+      text-decoration: none;
+      padding: 4px;
+    }
 
-		a.inactive {
-			border: none;
-			text-decoration:underline;
-			padding: 4px;
-		}
+    a.inactive {
+      border: none;
+      text-decoration:underline;
+      padding: 4px;
+    }
 
-		a {
-			color: #2c3e50;
-		}
+    a {
+      color: #2c3e50;
+    }
 
-		#transform {
-			font-size: 24px;
-			font-weight: bold;
-			margin-left: 310px;
-			border: solid;
-			border-width:2px;
-			padding: 8px;
-			text-decoration: none;
-		}
+    #transform {
+      font-size: 24px;
+      font-weight: bold;
+      margin-left: 310px;
+      border: solid;
+      border-width:2px;
+      padding: 8px;
+      text-decoration: none;
+    }
 
-		.controls {
-			padding-bottom: 30px;
-		}
+    .controls {
+      padding-bottom: 30px;
+    }
 
-		#rtranscript {
-			padding: 8px;
-			font-size: 16px;
-			line-height: 20px;
-			overflow:scroll;
-			overflow-x:hidden;
-			height: 500px;
-		}
+    #rtranscript {
+      padding: 8px;
+      font-size: 16px;
+      line-height: 20px;
+      overflow:scroll;
+      overflow-x:hidden;
+      height: 500px;
+    }
 
-		#save-button-saving {
-			width: 48px;
-			height: 48px;
-			position: absolute;
-			top: 0;
-			right: 0;
-			background-color: #808080;
-			background-image: url('/pad/images/ajax-loader-ffffff-on-808080.gif');
-			background-position: center center;
-			background-repeat: no-repeat;
-			display:none;
-		}
+    #save-button-saving {
+      width: 48px;
+      height: 48px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #808080;
+      background-image: url('/pad/images/ajax-loader-ffffff-on-808080.gif');
+      background-position: center center;
+      background-repeat: no-repeat;
+      display:none;
+    }
 
-	</style>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
-	<script type="text/javascript" src="js/converter.js"></script>
+  </style>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
+  <script type="text/javascript" src="js/converter.js"></script>
 
 </head>
 <body>
 
 <div id="wrapper">
 
-	<header id="header">
-		<h1>Hyperaudio Converter</h1>
-		<div id="save-button">6</div>
-		<div id="save-button-saving"></div>
-	</header>
+  <header id="header">
+    <h1>Hyperaudio Converter</h1>
+    <div id="save-button">6</div>
+    <div id="save-button-saving"></div>
+  </header>
 
-	<div class="holder">
-		<div class="instructions">
-			
-			<h2>Convert your subtitles into a hypertranscript.</h2>
-			<p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
-			<form>
-				<!--<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>-->
-						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
-			</form>
-			<h3 id="srt-title" class="entry-title">Paste SRT formatted subtitles here ⤵</h3>
-		</div>
+  <div class="holder">
+    <div class="instructions">
+      
+      <h2>Convert your subtitles into a hypertranscript.</h2>
+      <p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
+      <form>
+        <!--<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>-->
+            <p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
+      </form>
+      <h3 id="srt-title" class="entry-title">Paste SRT formatted subtitles here ⤵</h3>
+    </div>
 
-		<div class="source-content">
-			<textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
-		</div>
-	</div>
+    <div class="source-content">
+      <textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
+    </div>
+  </div>
 
-	<div class="holder">
-		<div class="instructions">
-			
-				<form class="controls">
-						<p style="margin-top:16px">Paragraph split on delay:</p>
-						<p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
-						<span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
-						<p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
-				</form>
-				<p><a id="transform" href="#">Transform <img class="transform-spinner" style="display:none" src="/pad/images/ajax-loader-ffffff-on-808080.gif"></a></p>
-				<h3 id="script-title" class="entry-title">hypertranscript appears here ⤵</h3>
-				<a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
-		</div>
-		<div class="target-content">
-			<textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
-			<div style="display:none" id="rtranscript"></div>
-		</div>
-	</div>
+  <div class="holder">
+    <div class="instructions">
+      
+        <form class="controls">
+            <p style="margin-top:16px">Paragraph split on delay:</p>
+            <p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
+            <span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
+            <p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
+        </form>
+        <p><a id="transform" href="#">Transform <img class="transform-spinner" style="display:none" src="/pad/images/ajax-loader-ffffff-on-808080.gif"></a></p>
+        <h3 id="script-title" class="entry-title">hypertranscript appears here ⤵</h3>
+        <a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
+    </div>
+    <div class="target-content">
+      <textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
+      <div style="display:none" id="rtranscript"></div>
+    </div>
+  </div>
 
-	<div class="footer">
-	</div>
+  <div class="footer">
+  </div>
 </div>
 
 <script type="text/javascript" src="lib/purl.js"></script>
@@ -164,148 +164,148 @@
 
 $(document).ready(function() {
 
-	var API = 'http://api.hyperaud.io/v1';
+  var API = 'http://api.hyperaud.io/v1';
 
-	var mediaObject;
-	var mediaID = purl(window.top.document.location.href).param('m');
+  var mediaObject;
+  var mediaID = purl(window.top.document.location.href).param('m');
 
-	// MB adding check to see if param is present
+  // MB adding check to see if param is present
 
-	/*console.log("checking for presence of param");
-	console.log(document.location.href);
-	console.log(window.top.document.location.href);*/
+  /*console.log("checking for presence of param");
+  console.log(document.location.href);
+  console.log(window.top.document.location.href);*/
 
-	if (mediaID) {
-		$.get(API + '/media/' + mediaID, function(m) {
-	  	mediaObject = m;
-	  	//console.log(m);
-	  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
-	  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
-	  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
-		});
-	}
+  if (mediaID) {
+    $.get(API + '/media/' + mediaID, function(m) {
+      mediaObject = m;
+      //console.log(m);
+      // var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
+      //   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
+      //   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+    });
+  }
 
-	
+  
 
-	var user;
-	function whoami(callback) {
-	  $.ajax(API+'/whoami', {
-	   type: "GET",
-	   contentType: "application/json; charset=utf-8",
-	   success: function(whoami) {
-	      if (whoami.user) {
-	        // logged in
-	        //alert('logged in');
-	        user = whoami.user;
+  var user;
+  function whoami(callback) {
+    $.ajax(API+'/whoami', {
+     type: "GET",
+     contentType: "application/json; charset=utf-8",
+     success: function(whoami) {
+        if (whoami.user) {
+          // logged in
+          //alert('logged in');
+          user = whoami.user;
 
-	        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User logged in (whoami)"}});
-	      	document.dispatchEvent(event);
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User logged in (whoami)"}});
+          document.dispatchEvent(event);
 
-	      } else {
-	        // not logged in
-	        //alert('NOT logged in');
-	        user = null;
+        } else {
+          // not logged in
+          //alert('NOT logged in');
+          user = null;
 
-	        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User NOT logged in (whoami)"}});
-	      	document.dispatchEvent(event);
-	      }
-	      if (callback) callback();
-	    },
-	    xhrFields: {
-	      withCredentials: true
-	    },
-	      crossDomain: true 
-	  });
-	}
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User NOT logged in (whoami)"}});
+          document.dispatchEvent(event);
+        }
+        if (callback) callback();
+      },
+      xhrFields: {
+        withCredentials: true
+      },
+        crossDomain: true 
+    });
+  }
 
-	var transcriptObject = null;
-	$('#save-button').click(function() {
-		$('#save-button').hide();
-		$('#save-button-saving').show();
+  var transcriptObject = null;
+  $('#save-button').click(function() {
+    $('#save-button').hide();
+    $('#save-button-saving').show();
 
-		var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","action":"Save"}});
-	  document.dispatchEvent(event);
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","action":"Save"}});
+    document.dispatchEvent(event);
 
-	  whoami(function() {
-	  	console.dir(user);
-	    if (user) {
-	      //
-	      if (transcriptObject) {
-	          $.ajax( API+'/' + user.username + '/transcripts/' + transcriptObject._id, {
-	            type: "PUT",
-	            data: {
-	              _id: transcriptObject._id,
-	              label:  mediaObject.label,
-	              type: 'html',
-	              sort: 0,
-	              owner: user.username,
-	              content: $('#htranscript').val(),
-	              media: mediaID
-	            },
-	            success: function(data) {
-	              transcriptObject = data;
-	              //console.log(data);
-	              $('#save-button-saving').hide();
-								$('#save-button').show();
+    whoami(function() {
+      console.dir(user);
+      if (user) {
+        //
+        if (transcriptObject) {
+            $.ajax( API+'/' + user.username + '/transcripts/' + transcriptObject._id, {
+              type: "PUT",
+              data: {
+                _id: transcriptObject._id,
+                label:  mediaObject.label,
+                type: 'html',
+                sort: 0,
+                owner: user.username,
+                content: $('#htranscript').val(),
+                media: mediaID
+              },
+              success: function(data) {
+                transcriptObject = data;
+                //console.log(data);
+                $('#save-button-saving').hide();
+                $('#save-button').show();
 
-								var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success with initial transcriptObject"}});
-	      				document.dispatchEvent(event);
-	            },
-	            error: function() {
-	            	$('#save-button-saving').hide();
-								$('#save-button').show();
-	              alert('Save Error');
+                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success with initial transcriptObject"}});
+                document.dispatchEvent(event);
+              },
+              error: function() {
+                $('#save-button-saving').hide();
+                $('#save-button').show();
+                alert('Save Error');
 
-	              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR with initial transcriptObject"}});
-	      				document.dispatchEvent(event);
-	            },
-	            xhrFields: {
-	              withCredentials: true
-	            },
-	            crossDomain: true
-	          });
-	      } else {
-	        $.ajax( API+'/' + user + '/transcripts', {
-	          type: "POST",
-	          data: {
-	            label:  mediaObject.label,
-	            type: 'html',
-	            sort: 0,
-	            owner: user,
-	            content: $('#htranscript').val(),
-	            media: mediaID
-	          },
-	          success: function(data) {
-	            transcriptObject = data;
-	            //console.log(data);
-	            $('#save-button-saving').hide();
-							$('#save-button').show();
+                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR with initial transcriptObject"}});
+                document.dispatchEvent(event);
+              },
+              xhrFields: {
+                withCredentials: true
+              },
+              crossDomain: true
+            });
+        } else {
+          $.ajax( API+'/' + user + '/transcripts', {
+            type: "POST",
+            data: {
+              label:  mediaObject.label,
+              type: 'html',
+              sort: 0,
+              owner: user,
+              content: $('#htranscript').val(),
+              media: mediaID
+            },
+            success: function(data) {
+              transcriptObject = data;
+              //console.log(data);
+              $('#save-button-saving').hide();
+              $('#save-button').show();
 
-							var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success without initial transcriptObject"}});
-    					document.dispatchEvent(event);
-	          },
-	          error: function() {
-	          	$('#save-button-saving').hide();
-							$('#save-button').show();
-	            alert('Save Error');
-	            var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR without initial transcriptObject"}});
-	            document.dispatchEvent(event);
-	          },
-	          xhrFields: {
-	            withCredentials: true
-	          },
-	          crossDomain: true
-	        });
-	      }
-	      //
-	    } else {
+              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success without initial transcriptObject"}});
+              document.dispatchEvent(event);
+            },
+            error: function() {
+              $('#save-button-saving').hide();
+              $('#save-button').show();
+              alert('Save Error');
+              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR without initial transcriptObject"}});
+              document.dispatchEvent(event);
+            },
+            xhrFields: {
+              withCredentials: true
+            },
+            crossDomain: true
+          });
+        }
+        //
+      } else {
 
-	    	var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Alert","action":"Please sign in to save."}});
-	      document.dispatchEvent(event);
-	      alert('Please sign in to save.');
-	    }
-	  });
-	});
+        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Alert","action":"Please sign in to save."}});
+        document.dispatchEvent(event);
+        alert('Please sign in to save.');
+      }
+    });
+  });
 });
 </script>
 <!-- remove the following line if analytics are not required -->
