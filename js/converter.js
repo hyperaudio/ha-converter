@@ -14,7 +14,9 @@ $(document).ready(function(){
     $(this).removeClass('inactive');
     $('#rtranscript').hide();
     $('#htranscript').show();
-    _gaq.push(['_trackEvent', 'HA-Converter', 'View-Switch', 'Markup View']);
+
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"View-Switch","action":"Markup View"}});
+    document.dispatchEvent(event);
     return false;
   });
 
@@ -24,7 +26,9 @@ $(document).ready(function(){
     $(this).removeClass('inactive');
     $('#htranscript').hide();
     $('#rtranscript').show();
-    _gaq.push(['_trackEvent', 'HA-Converter', 'View-Switch', 'Rendered View']);
+
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"View-Switch","action":"Rendered View"}});
+    document.dispatchEvent(event);
     return false;
   });
   
@@ -32,7 +36,8 @@ $(document).ready(function(){
   
   function parseSRT(data) {
 
-    _gaq.push(['_trackEvent', 'HA-Converter', 'Function', 'parseSRT init']);
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Function","action":"parseSRT init"}});
+    document.dispatchEvent(event);
 
     var i = 0,
     len = 0,
@@ -147,10 +152,12 @@ $(document).ready(function(){
         var stime;
         if (wordLengthSplit) {
           stime = Math.round((sub.start + si*stimeStep) * 1000);
-          _gaq.push(['_trackEvent', 'HA-Converter', 'Setting', 'Word length split ON']);
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Setting","action":"Word length split ON"}});
+          document.dispatchEvent(event);
         } else {
           stime = Math.round((wordStart + sub.start) * 1000);
-          _gaq.push(['_trackEvent', 'HA-Converter', 'Setting', 'Word length split OFF']);
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Setting","action":"Word length split OFF"}});
+          document.dispatchEvent(event);
         }
         
         wordStart = wordStart + wordTime;
@@ -184,7 +191,8 @@ $(document).ready(function(){
       
     }
     return outputString + "</p><footer></footer></section></footer></footer></article>";
-    _gaq.push(['_trackEvent', 'HA-Converter', 'Function', 'parseSRT finished']);
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Function","action":"parseSRT finished"}});
+    document.dispatchEvent(event);
   }
   
 
@@ -212,7 +220,8 @@ $(document).ready(function(){
     //console.log($('#subtitles').text());
 
     $('.transform-spinner').hide();
-    _gaq.push(['_trackEvent', 'HA-Converter', 'Button', 'Transform SRT']);
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","Transform SRT":"parseSRT finished"}});
+    document.dispatchEvent(event);
     return false;
   });
 });

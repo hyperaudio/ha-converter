@@ -197,12 +197,17 @@ $(document).ready(function() {
 	        // logged in
 	        //alert('logged in');
 	        user = whoami.user;
-	        _gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'User logged in (whoami)']);
+
+	        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User logged in (whoami)"}});
+	      	document.dispatchEvent(event);
+
 	      } else {
 	        // not logged in
 	        //alert('NOT logged in');
 	        user = null;
-	        _gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'User NOT logged in (whoami)']);
+
+	        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User NOT logged in (whoami)"}});
+	      	document.dispatchEvent(event);
 	      }
 	      if (callback) callback();
 	    },
@@ -217,7 +222,10 @@ $(document).ready(function() {
 	$('#save-button').click(function() {
 		$('#save-button').hide();
 		$('#save-button-saving').show();
-		_gaq.push(['_trackEvent', 'HA-Converter', 'Button', 'Save']);
+
+		var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","action":"Save"}});
+	  document.dispatchEvent(event);
+
 	  whoami(function() {
 	  	console.dir(user);
 	    if (user) {
@@ -239,13 +247,17 @@ $(document).ready(function() {
 	              //console.log(data);
 	              $('#save-button-saving').hide();
 								$('#save-button').show();
-								_gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'Save success with initial transcriptObject']);
+
+								var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success with initial transcriptObject"}});
+	      				document.dispatchEvent(event);
 	            },
 	            error: function() {
 	            	$('#save-button-saving').hide();
 								$('#save-button').show();
 	              alert('Save Error');
-	              _gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'Save ERROR with initial transcriptObject']);
+
+	              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR with initial transcriptObject"}});
+	      				document.dispatchEvent(event);
 	            },
 	            xhrFields: {
 	              withCredentials: true
@@ -268,13 +280,16 @@ $(document).ready(function() {
 	            //console.log(data);
 	            $('#save-button-saving').hide();
 							$('#save-button').show();
-							_gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'Save success without initial transcriptObject']);
+
+							var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success without initial transcriptObject"}});
+    					document.dispatchEvent(event);
 	          },
 	          error: function() {
 	          	$('#save-button-saving').hide();
 							$('#save-button').show();
 	            alert('Save Error');
-	            _gaq.push(['_trackEvent', 'HA-Converter', 'XHR', 'Save ERROR without initial transcriptObject']);
+	            var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR without initial transcriptObject"}});
+	            document.dispatchEvent(event);
 	          },
 	          xhrFields: {
 	            withCredentials: true
@@ -284,25 +299,16 @@ $(document).ready(function() {
 	      }
 	      //
 	    } else {
-	    	_gaq.push(['_trackEvent', 'HA-Converter', 'Alert', 'Please sign in to save.']);
+
+	    	var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Alert","action":"Please sign in to save."}});
+	      document.dispatchEvent(event);
 	      alert('Please sign in to save.');
 	    }
 	  });
 	});
 });
 </script>
-<script>
-
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-42809936-1']); // hyperaud.io
-_gaq.push(['_trackPageview']);
-
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-
-</script>
+<!-- remove the following line if analytics are not required -->
+<script type="text/javascript" src="/commons/tools/analytics/ga.js"></script>
 </body>
 </html>
