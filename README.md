@@ -1,4 +1,4 @@
-hyperaudioconverter
-===================
+Hyperaudio Converter
+====================
 
-Hyperaudio Converter - Converts from various formats into hypertranscripts.
+A tool that converts from various formats into 'hypertranscripts' the word-level timed format we use in Hyperaud.io.
