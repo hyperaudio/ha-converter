@@ -233,7 +233,9 @@ $(document).ready(function() {
         if (transcriptObject) {
             $.ajax( API+'/' + user.username + '/transcripts/' + transcriptObject._id, {
               type: "PUT",
-              data: {
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              data: JSON.stringify({
                 _id: transcriptObject._id,
                 label:  mediaObject.label,
                 type: 'html',
@@ -241,7 +243,7 @@ $(document).ready(function() {
                 owner: user.username,
                 content: $('#htranscript').val(),
                 media: mediaID
-              },
+              }),
               success: function(data) {
                 transcriptObject = data;
                 //console.log(data);
@@ -267,14 +269,16 @@ $(document).ready(function() {
         } else {
           $.ajax( API+'/' + user + '/transcripts', {
             type: "POST",
-            data: {
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
               label:  mediaObject.label,
               type: 'html',
               sort: 0,
               owner: user,
               content: $('#htranscript').val(),
               media: mediaID
-            },
+            }),
             success: function(data) {
               transcriptObject = data;
               //console.log(data);
