@@ -91,7 +91,7 @@ $(document).ready(function(){
         time = lines[i++].split( /[\t ]*-->[\t ]*/ );
       }
       catch (e) {
-        alert("not a valid SRT file");
+        alert("Warning. May not be a valid SRT file");
         break;
       }
 
