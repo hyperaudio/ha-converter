@@ -173,7 +173,7 @@ $(document).ready(function() {
   if (transcriptID) {
     $.get(API + '/transcripts/' + transcriptID, function(t) {
       transcriptObject = t;
-      console.log(t.content);
+      //console.log(t.content);
       $('#subtitles').text(t.content);
     });
   }
