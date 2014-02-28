@@ -168,6 +168,16 @@ $(document).ready(function() {
 
   var mediaObject;
   var mediaID = purl(window.top.document.location.href).param('m');
+  var transcriptID = purl(window.top.document.location.href).param('t');
+
+  if (transcriptID) {
+    $.get(API + '/transcripts/' + transcriptID, function(t) {
+      transcriptObject = t;
+      console.log(t.content);
+      $('#subtitles').text(t.content);
+    });
+  }
+
 
   // MB adding check to see if param is present
 
