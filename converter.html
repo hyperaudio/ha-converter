@@ -247,7 +247,7 @@ $(document).ready(function() {
               dataType: "json",
               data: JSON.stringify({
                 _id: transcriptObject._id,
-                label:  mediaObject.label,
+                label:  mediaObject?mediaObject.label:'',
                 type: 'html',
                 sort: 0,
                 owner: user.username,
