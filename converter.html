@@ -241,7 +241,7 @@ $(document).ready(function() {
       if (user) {
         //
         if (transcriptObject) {
-            $.ajax( API+'/' + user.username + '/transcripts/' + transcriptObject._id, {
+            $.ajax( API+'/' + user + '/transcripts/' + transcriptObject._id, {
               type: "PUT",
               contentType: "application/json; charset=utf-8",
               dataType: "json",
@@ -250,7 +250,7 @@ $(document).ready(function() {
                 label:  mediaObject?mediaObject.label:'',
                 type: 'html',
                 sort: 0,
-                owner: user.username,
+                owner: user,
                 content: $('#htranscript').val(),
                 media: mediaID
               }),
