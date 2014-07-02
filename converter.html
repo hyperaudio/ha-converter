@@ -174,6 +174,7 @@ $(document).ready(function() {
     $.get(API + '/transcripts/' + transcriptID, function(t) {
       transcriptObject = t;
       mediaObject = t.media;
+      mediaID = mediaObject._id;
       //console.log(t.content);
       $('#subtitles').text(t.content);
     });
@@ -186,7 +187,7 @@ $(document).ready(function() {
   console.log(document.location.href);
   console.log(window.top.document.location.href);*/
 
-  if (mediaID) {
+  if (mediaID && !transcriptID) {
     $.get(API + '/media/' + mediaID, function(m) {
       mediaObject = m;
       //console.log(m);
