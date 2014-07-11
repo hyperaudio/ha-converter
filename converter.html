@@ -163,8 +163,16 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+	
+  var namespace = null;
+  if (document.location.hostname.indexOf('hyperaud') > 0) {
+    namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+  }
+  
+  var prefix = '';
+  if (namespace) prefix = namespace + '.';
 
-  var API = 'http://api.hyperaud.io/v1';
+  var API = 'http://' + prefix + 'api.hyperaud.io/v1';
 
   var mediaObject;
   var mediaID = purl(window.top.document.location.href).param('m');
