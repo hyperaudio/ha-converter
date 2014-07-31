@@ -3,475 +3,334 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <head>
-	<!--<link rel="stylesheet" type="text/css" href="css/main.css" />-->
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-	<style type="text/css">
-		.wrapper {
-			width: 980px; 
-			background: #ffffff;
-			margin: 0 auto; 
-		}
+  <!--<link rel="stylesheet" type="text/css" href="css/main.css" />-->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+    .wrapper {
+      width: 980px; 
+      background: #ffffff;
+      margin: 0 auto; 
+    }
 
-		.header {
-			background: black; 
-			color: white; 
-		}
+    .header {
+      background: black; 
+      color: white; 
+    }
 
-		.holder {
-			margin-top: 50px;
-			width: 50%; 
-			float: left;
-			background: #ffffff;
-		}
+    .holder {
+      margin-top: 50px;
+      width: 50%; 
+      float: left;
+      background: #ffffff;
+    }
 
-		.instructions {
-			padding: 10px;
-			height: 310px;
-			font-size: 16px;
-			line-height: 24px;
-		}
+    .instructions {
+      padding: 10px;
+      height: 310px;
+      font-size: 16px;
+      line-height: 24px;
+    }
 
-		.footer {
-			height: 10px;
-			background: #ffffff;
-			clear: both; 
-		}
+    .footer {
+      height: 10px;
+      background: #ffffff;
+      clear: both; 
+    }
 
-		textarea, #rtranscript { 
-			margin-left:10px;
-			padding: 10px; 
-			outline: 2px dashed #2c3e50; 
-			border: none;margin-top:10px;
-		}
+    textarea, #rtranscript { 
+      margin-left:10px;
+      padding: 10px; 
+      outline: 2px dashed #2c3e50; 
+      border: none;margin-top:10px;
+    }
 
-		textarea:hover { 
-			outline: 2px dashed #2c3e50; 
-			border: none;
-		}
-		
-		#header {
-			background: #2c3e50;
-		}
+    textarea:hover { 
+      outline: 2px dashed #2c3e50; 
+      border: none;
+    }
+    
+    .tab {
+      border: solid;
+      border-width:1px;
+      border-bottom:thick dotted #ffffff;
+      text-decoration: none;
+      padding: 4px;
+    }
 
-		#save-button {
-			background: #666;
-		}
+    a.inactive {
+      border: none;
+      text-decoration:underline;
+      padding: 4px;
+    }
 
-		#save-button:hover {
-			background: #ccc;
-			color: #2c3e50;
-		}
+    a {
+      color: #2c3e50;
+    }
 
-		.tab {
-			border: solid;
-			border-width:1px;
-			border-bottom:thick dotted #ffffff;
-			text-decoration: none;
-			padding: 4px;
-		}
+    #transform {
+      font-size: 24px;
+      font-weight: bold;
+      margin-left: 310px;
+      border: solid;
+      border-width:2px;
+      padding: 8px;
+      text-decoration: none;
+    }
 
-		a.inactive {
-			border: none;
-			text-decoration:underline;
-			padding: 4px;
-		}
+    .controls {
+      padding-bottom: 30px;
+    }
 
-		a {
-			color: #2c3e50;
-		}
+    #rtranscript {
+      padding: 8px;
+      font-size: 16px;
+      line-height: 20px;
+      overflow:scroll;
+      overflow-x:hidden;
+      height: 500px;
+    }
 
-		#transform {
-			font-size: 24px;
-			font-weight: bold;
-			margin-left: 330px;
-			border: solid;
-			border-width:2px;
-			padding: 8px;
-			text-decoration: none;
-		}
+    #save-button-saving {
+      width: 48px;
+      height: 48px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #808080;
+      background-image: url('/pad/images/ajax-loader-ffffff-on-808080.gif');
+      background-position: center center;
+      background-repeat: no-repeat;
+      display:none;
+    }
 
-		.controls {
-			padding-bottom: 30px;
-		}
-
-		#rtranscript {
-			padding: 8px;
-			font-size: 16px;
-			line-height: 20px;
-			overflow:scroll;
-			overflow-x:hidden;
-			height: 625px;
-		}
-
-	</style>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
-
-	<script type="text/javascript">
-	$(document).ready(function(){
-
-		var p = document.getElementById("para-split");
-    var cp = document.getElementById("current-para-split");
-    var paraSplitTime;
-
-		p.addEventListener('input',function(){
-      cp.innerHTML = p.value;
-       paraSplitTime = p.value;
-    },false);
-
-		$('#markup-view').click(function(){
-			$('#rendered-view').addClass('inactive');
-			$(this).removeClass('inactive');
-			$('#rtranscript').hide();
-			$('#htranscript').show();
-			return false;
-		});
-
-		$('#rendered-view').click(function(){
-			$('#markup-view').addClass('inactive');
-			$(this).removeClass('inactive');
-			$('#htranscript').hide();
-			$('#rtranscript').show();
-			return false;
-		});
-		
-		// stolen wholesale from popcorn.parserSRT.js
-		
-		function parseSRT(data) {
-
-			var i = 0,
-			len = 0,
-			idx = 0,
-			lines,
-			time,
-			text,
-			sub;
-
-			// Simple function to convert HH:MM:SS,MMM or HH:MM:SS.MMM to SS.MMM
-			// Assume valid, returns 0 on error
-			var toSeconds = function( t_in ) {
-				var t = t_in.split( ':' );
-
-				try {
-	        var s = t[2].split( ',' );
-
-	        // Just in case a . is decimal seperator
-	        if ( s.length === 1 ) {
-	          s = t[2].split( '.' );
-	        }
-
-	        return parseFloat( t[0], 10 )*3600 + parseFloat( t[1], 10 )*60 + parseFloat( s[0], 10 ) + parseFloat( s[1], 10 )/1000;
-	      } catch ( e ) {
-	        return 0;
-	      }
-	    };
-
-      var outputString = "<article><header></header><section><header></header><p>";
-      var lineBreaks = $('#line-breaks').prop('checked');
-      var paraPunct = $('#para-punctuation').prop('checked');
-      var ltime = 0;
-      var ltext;
-
-	    // Here is where the magic happens
-	    // Split on line breaks
-	    lines = data.split( /(?:\r\n|\r|\n)/gm );
-	    len = lines.length;
-
-
-
-	    for( i=0; i < len; i++ ) {
-	      
-	      sub = {};
-	      text = [];
-
-	      sub.id = parseInt( lines[i++], 10 );
-
-	      // Split on '-->' delimiter, trimming spaces as well
-
-	      try {
-   				time = lines[i++].split( /[\t ]*-->[\t ]*/ );
-				}
-				catch (e) {
-					alert("not a valid SRT file");
-   				break;
-				}
-
-	      sub.start = toSeconds( time[0] );
-
-	      // So as to trim positioning information from end
-	      idx = time[1].indexOf( " " );
-	      if ( idx !== -1) {
-	        time[1] = time[1].substr( 0, idx );
-	      }
-	      sub.end = toSeconds( time[1] );
-
-	      // Build single line of text from multi-line subtitle in file
-	      while ( i < len && lines[i] ) {
-	        text.push( lines[i++] );
-	      }
-
-	      // Join into 1 line, SSA-style linebreaks
-	      // Strip out other SSA-style tags
-	      sub.text = text.join( "\\N" ).replace( /\{(\\[\w]+\(?([\w\d]+,?)+\)?)+\}/gi, "" );
-
-	      // Escape HTML entities
-	      sub.text = sub.text.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
-
-	      // Unescape great than and less than when it makes a valid html tag of a supported style (font, b, u, s, i)
-	      // Modified version of regex from Phil Haack's blog: http://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx
-	      // Later modified by kev: http://kevin.deldycke.com/2007/03/ultimate-regular-expression-for-html-tag-parsing-with-php/
-	      sub.text = sub.text.replace( /&lt;(\/?(font|b|u|i|s))((\s+(\w|\w[\w\-]*\w)(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)(\/?)&gt;/gi, "<$1$3$7>" );
-	      //sub.text = sub.text.replace( /\\N/gi, "<br />" );
-				sub.text = sub.text.replace( /\\N/gi, " " );
-
-				var splitMode = 0;
-
-				var wordLengthSplit = $('#word-length').prop('checked');
-
-		  	// enhancements to take account of word length
-
-		  	var swords = sub.text.split(' ');
-        var sduration = sub.end - sub.start;
-        var stimeStep = sduration/swords.length;
-
-       	// determine length of words
-        
-        var swordLengths = [];
-        var swordTimes = [];
-
-        var totalLetters = 0;
-        for (var si=0, sl=swords.length; si<sl; ++si) {
-        	totalLetters = totalLetters + swords[si].length;
-        	swordLengths[si] = swords[si].length;
-        }
-
-        var letterTime = sduration / totalLetters;
-        var wordStart = 0;
-        
-        
-        for (var si=0, sl=swords.length; si<sl; ++si) {
-        	var wordTime = swordLengths[si]*letterTime;
-        	var stime;
-        	if (wordLengthSplit) {
-        		stime = Math.round((sub.start + si*stimeStep) * 1000);
-        	} else {
-        		stime = Math.round((wordStart + sub.start) * 1000);
-        	}
-        	
-          wordStart = wordStart + wordTime;
-          var stext = swords[si];
-          //var ssafeText = stext.replace('"', '\\"');
-          //outputString += '<span m="'+stime+'" oval="'+ssafeText+'">'+stext+'</span> '+'\n';
-          
-          console.log("stime");
-          console.log(stime);
-          console.log("ltime");
-          console.log(ltime);
-          console.log("diff");
-          console.log(stime - ltime);
-
-          if (((stime - ltime) > paraSplitTime * 1000) && paraSplitTime > 0)  {
-          	console.log("fullstop? "+stext+" - "+stext.indexOf("."));
-          	var punctPresent = ltext.indexOf(".") > 0 || ltext.indexOf("?") > 0 || ltext.indexOf("!") > 0;
-						if (!paraPunct || (paraPunct && punctPresent)) {
-          		outputString += '</p><p>';
-          	}
-          }
-
-          outputString += '<a data-m="'+stime+'">'+stext+' </a>';
-
-          ltime = stime;
-          ltext = stext;
-
-          if (lineBreaks) outputString = outputString + '\n';
-        }
-      	
-	    }
-	    return outputString + "</p><footer></footer></section></footer></footer></article>";
-		}
-		
-
-	
-		/*$.get('test.srt', function(data) {    
-		  console.log(data);
-		  console.log(parseSRT(data));
-		});*/
-		
-		$('#transform').click(function() {
-			
-			var srt = $('#subtitles').val();
-			/*var regex = /<br\s*[\/]?>/gi;
-			srt = srt.replace(regex,'\n');
-			regex = /&gt;/gi; 
-			srt = srt.replace(regex,'>');
-			//console.log(srt);*/
-			
-			var ht = parseSRT(srt);
-			/*ht = ht.replace(/\r\n|\r|\n/gi, '<br/>');   */
-			  
-			$('#htranscript').val(ht); 
-			$('#rtranscript').html(ht);
-			//console.log($('#subtitles').text());
-			return false;
-		});
-		
-		
-	});
-	</script>
-
+  </style>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
+  <script type="text/javascript" src="js/converter.js"></script>
 </head>
 <body>
 
 <div id="wrapper">
+  <header id="header">
+    <h1>Hyperaudio Converter</h1>
+    <div id="save-button">6</div>
+    <div id="save-button-saving"></div>
+  </header>
 
-	<header id="header">
-		<h1>Hyperaudio Converter</h1>
-		<div id="save-button">6</div>
-	</header>
+  <div class="holder">
+    <div class="instructions">
+      
+      <h2>Convert your subtitles into a hypertranscript.</h2>
+      <p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
+      <form>
+        <!--<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>-->
+            <p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
+      </form>
+      <h3 id="srt-title" class="entry-title">Paste SRT formatted subtitles here ⤵</h3>
+    </div>
 
-	<div class="holder">
-		<div class="instructions">
-			
-			<h2>Convert your subtitles into a hypertranscript.</h2>
-			<p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> into the pane below and press the transform button.</p>
-			<form>
-				<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks?</p>
-						<p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
-			</form>
-			<h3 id="srt-title" class="entry-title">SRT (subtitles go here) ⤵</h3>
-		</div>
+    <div class="source-content">
+      <textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
+    </div>
+  </div>
 
-		<div class="source-content">
-			<textarea id="subtitles" class="entry-content" rows="40" cols="54"></textarea>
-		</div>
-	</div>
+  <div class="holder">
+    <div class="instructions">
+      
+        <form class="controls">
+            <p style="margin-top:16px">Paragraph split on delay:</p>
+            <p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
+            <span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
+            <p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
+        </form>
+        <p><a id="transform" href="#">Transform <img class="transform-spinner" style="display:none" src="/pad/images/ajax-loader-ffffff-on-808080.gif"></a></p>
+        <h3 id="script-title" class="entry-title">hypertranscript appears here ⤵</h3>
+        <a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
+    </div>
+    <div class="target-content">
+      <textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
+      <div style="display:none" id="rtranscript"></div>
+    </div>
+  </div>
 
-	<div class="holder">
-		<div class="instructions">
-			
-				<form class="controls">
-						<p style="margin-top:16px">Paragraph split on delay:</p>
-						<p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
-						<span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
-						<p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
-				</form>
-				<p><a id="transform" href="#">Transform</a></p>
-				<h3 id="script-title" class="entry-title">hypertranscript appears here ⤵</h3>
-				<a id="markup-view" class="tab" href="#">Markup View</a> <a id="rendered-view" class="tab inactive" href="#">Rendered View</a>
-		</div>
-		<div class="target-content">
-			<textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
-			<div style="display:none" id="rtranscript"></div>
-		</div>
-	</div>
-
-	<div class="footer">
-	</div>
+  <div class="footer">
+  </div>
 </div>
 
 <script type="text/javascript" src="lib/purl.js"></script>
-<script>
-var mediaObject;
-var mediaID = purl(document.location.href).param('m');
+<script type="text/javascript">
 
-// MB adding check to see if param is present
+$(document).ready(function() {
+	
+  var namespace = null;
+  if (document.location.hostname.indexOf('hyperaud') > 0) {
+    namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+  }
+  
+  var prefix = '';
+  if (namespace) prefix = namespace + '.';
 
-if (mediaID) {
-	$.get('http://api.hyperaud.io/media/' + mediaID, function(m) {
-  	mediaObject = m;
-  	console.log(m);
-  	// var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
-  	//   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
-  	//   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
-	});
-}
+  var API = 'http://' + prefix + 'api.hyperaud.io/v1';
+
+  var mediaObject;
+  var mediaID = purl(window.top.document.location.href).param('m');
+  var transcriptID = purl(window.top.document.location.href).param('t');
+
+  if (transcriptID) {
+    $.get(API + '/transcripts/' + transcriptID, function(t) {
+      transcriptObject = t;
+      mediaObject = t.media;
+      mediaID = mediaObject._id;
+      //console.log(t.content);
+      $('#subtitles').text(t.content);
+    });
+  }
 
 
-var user;
-function whoami(callback) {
-  $.ajax('http://api.hyperaud.io/whoami', {
-    type: "GET",
-   contentType: "application/json; charset=utf-8",
-   success: function(whoami) {
-      if (whoami.user) {
-        // logged in
-        // alert('logged in');
-        user = whoami.user;
-      } else {
-        // not logged in
-        // alert('NOT logged in');
-        user = null;
-      }
-      if (callback) callback();
-    },
-    xhrFields: {
-      withCredentials: true
-    },
-      crossDomain: true 
-  });
-}
+  // MB adding check to see if param is present
 
-var transcriptObject = null;
-$('#save-button').click(function() {
-  whoami(function() {
-    if (user && user.username) {
-      //
-      if (transcriptObject) {
-          $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts/' + transcriptObject._id, {
-            type: "PUT",
-            data: {
-              _id: transcriptObject._id,
-              label:  'Transcript for ' + mediaObject.label,
+  /*console.log("checking for presence of param");
+  console.log(document.location.href);
+  console.log(window.top.document.location.href);*/
+
+  if (mediaID && !transcriptID) {
+    $.get(API + '/media/' + mediaID, function(m) {
+      mediaObject = m;
+      //console.log(m);
+      // var media = "http://data.hyperaud.io/" + m.owner + "/" + m.meta.filename;
+      //   $("#myVideo").append('<source src="' + media + '" type="video/mp4" />');
+      //   $("#myVideo").append('<source src="' + media.replace('mp4', 'webm') + '" type="video/mp4" />');
+    });
+  }
+
+  
+
+  var user;
+  function whoami(callback) {
+    $.ajax(API+'/whoami', {
+     type: "GET",
+     contentType: "application/json; charset=utf-8",
+     success: function(whoami) {
+        if (whoami.user) {
+          // logged in
+          //alert('logged in');
+          user = whoami.user;
+
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User logged in (whoami)"}});
+          document.dispatchEvent(event);
+
+        } else {
+          // not logged in
+          //alert('NOT logged in');
+          user = null;
+
+          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User NOT logged in (whoami)"}});
+          document.dispatchEvent(event);
+        }
+        if (callback) callback();
+      },
+      xhrFields: {
+        withCredentials: true
+      },
+        crossDomain: true 
+    });
+  }
+
+  var transcriptObject = null;
+  $('#save-button').click(function() {
+    $('#save-button').hide();
+    $('#save-button-saving').show();
+
+    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","action":"Save"}});
+    document.dispatchEvent(event);
+
+    whoami(function() {
+      console.dir(user);
+      if (user) {
+        //
+        if (transcriptObject) {
+            $.ajax( API+'/' + user + '/transcripts/' + transcriptObject._id, {
+              type: "PUT",
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              data: JSON.stringify({
+                _id: transcriptObject._id,
+                label:  mediaObject?mediaObject.label:'',
+                type: 'html',
+                sort: 0,
+                owner: user,
+                content: $('#htranscript').val(),
+                media: mediaID
+              }),
+              success: function(data) {
+                transcriptObject = data;
+                //console.log(data);
+                $('#save-button-saving').hide();
+                $('#save-button').show();
+
+                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success with initial transcriptObject"}});
+                document.dispatchEvent(event);
+              },
+              error: function() {
+                $('#save-button-saving').hide();
+                $('#save-button').show();
+                alert('Save Error');
+
+                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR with initial transcriptObject"}});
+                document.dispatchEvent(event);
+              },
+              xhrFields: {
+                withCredentials: true
+              },
+              crossDomain: true
+            });
+        } else {
+          $.ajax( API+'/' + user + '/transcripts', {
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+              label:  mediaObject.label,
               type: 'html',
               sort: 0,
-              owner: user.username,
+              owner: user,
               content: $('#htranscript').val(),
               media: mediaID
-            },
+            }),
             success: function(data) {
               transcriptObject = data;
-              console.log(data);
-              alert('Saved!');
+              //console.log(data);
+              $('#save-button-saving').hide();
+              $('#save-button').show();
+
+              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success without initial transcriptObject"}});
+              document.dispatchEvent(event);
             },
             error: function() {
+              $('#save-button-saving').hide();
+              $('#save-button').show();
               alert('Save Error');
+              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR without initial transcriptObject"}});
+              document.dispatchEvent(event);
             },
             xhrFields: {
               withCredentials: true
             },
             crossDomain: true
           });
+        }
+        //
       } else {
-        $.ajax( 'http://api.hyperaud.io/' + user.username + '/transcripts', {
-          type: "POST",
-          data: {
-            label:  'Transcript for ' + mediaObject.label,
-            type: 'html',
-            sort: 0,
-            owner: user.username,
-            content: $('#htranscript').val(),
-            media: mediaID
-          },
-          success: function(data) {
-            transcriptObject = data;
-            console.log(data);
-            alert('Created!');
-          },
-          error: function() {
-            alert('Save Error');
-          },
-          xhrFields: {
-            withCredentials: true
-          },
-          crossDomain: true
-        });
+
+        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Alert","action":"Please sign in to save."}});
+        document.dispatchEvent(event);
+        alert('Please sign in to save.');
       }
-      //
-    } else {
-      alert('not logged in');
-    }
+    });
   });
 });
 </script>
+<!-- remove the following line if analytics are not required -->
+<script type="text/javascript" src="/commons/tools/analytics/ga.js"></script>
 </body>
 </html>
