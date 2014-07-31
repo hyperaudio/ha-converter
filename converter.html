@@ -172,7 +172,14 @@ $(document).ready(function() {
   var prefix = '';
   if (namespace) prefix = namespace + '.';
 
-  var API = 'http://' + prefix + 'api.hyperaud.io/v1';
+  var domain;
+  if (document.location.hostname.indexOf('hyperaud.io') > -1) {
+    domain = 'hyperaud.io';
+  } else {
+    domain = 'hyperaudio.net';
+  }
+
+  var API = 'http://' + prefix + 'api.' + domain + '/v1';
 
   var mediaObject;
   var mediaID = purl(window.top.document.location.href).param('m');
