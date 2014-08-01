@@ -189,7 +189,14 @@ $(document).ready(function() {
       mediaObject = t.media;
       mediaID = mediaObject._id;
       //console.log(t.content);
-      $('#subtitles').text(t.content);
+      if (t.type == "srt") {
+        $('#subtitles').text(t.content);
+      } 
+
+      if (t.type == "html") {
+        $('#htranscript').text(t.content);
+      }
+      
     });
   }
 
