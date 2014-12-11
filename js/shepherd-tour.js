@@ -1,4 +1,5 @@
 (function() {
+  var uniqueCookieId = "hyperaudio-converter-hint=true";
   var init, setupShepherd;
 
   init = function() {
@@ -10,7 +11,7 @@
 
     // set the cookie
 
-    document.cookie="hyperaudio-hint=true";
+    document.cookie = uniqueCookieId;
 
     shepherd = new Shepherd.Tour({
       defaults: {
@@ -150,7 +151,7 @@
   };
 
 
-  if (document.cookie.indexOf("hyperaudio-hint=true") < 0) {
+  if (document.cookie.indexOf(uniqueCookieId) < 0) {
     $(init);
   };
 
