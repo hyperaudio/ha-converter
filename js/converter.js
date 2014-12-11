@@ -91,13 +91,18 @@ $(document).ready(function(){
         time = lines[i++].split( /[\t ]*-->[\t ]*/ );
       }
       catch (e) {
-        alert("Warning. May not be a valid SRT file");
+        alert("Warning. Possible issue on line "+i+": '"+lines[i]+"'.");
         break;
       }
 
       sub.start = toSeconds( time[0] );
 
       // So as to trim positioning information from end
+      if (!time[1]) {
+        alert("Warning. Issue on line "+i+": '"+lines[i]+"'.");
+        return;
+      }
+
       idx = time[1].indexOf( " " );
       if ( idx !== -1) {
         time[1] = time[1].substr( 0, idx );
@@ -205,14 +210,37 @@ $(document).ready(function(){
 
     $('.transform-spinner').show();
     
-    var srt = $('#subtitles').val();
+    var input = $('#subtitles').val();
     /*var regex = /<br\s*[\/]?>/gi;
     srt = srt.replace(regex,'\n');
     regex = /&gt;/gi; 
     srt = srt.replace(regex,'>');
     //console.log(srt);*/
+
+    var ht;
+
+    if (input[0] == '{') {
+      var data = JSON.parse(input);
+      var items = ['<article><header></header><section><header></header><p>'];
+      $.each( data, function( key, val ) {
+        if (key == "words") {
+          for (var i=0; i < val.length; i++) {
+            items.push( '<a data-d="' + Math.round(val[i].duration * 1000) + '" data-c="' + val[i].confidence + '" data-m="' + Math.round(val[i].time * 1000) + '">' + val[i].name + ' </a>' );
+          }
+        }
+      });
+
+      items.push('</p><footer></footer></section></footer></footer></article>');
+   
+      $( "<article/>", {
+        html: items.join( "" )
+      }).appendTo( "body" );
+      ht = items.join( "" );
+    } else {
+      ht = parseSRT(input);
+    }
     
-    var ht = parseSRT(srt);
+    
     /*ht = ht.replace(/\r\n|\r|\n/gi, '<br/>');   */
       
     $('#htranscript').val(ht); 
