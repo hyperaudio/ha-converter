@@ -232,9 +232,9 @@ $(document).ready(function(){
 
       items.push('</p><footer></footer></section></footer></footer></article>');
    
-      $( "<article/>", {
+      /*$( "<article/>", {
         html: items.join( "" )
-      }).appendTo( "body" );
+      }).appendTo( "body" );*/
       ht = items.join( "" );
     } else {
       ht = parseSRT(input);
