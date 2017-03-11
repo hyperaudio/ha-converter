@@ -265,67 +265,52 @@ $(document).ready(function(){
         var items = ['<article><header></header><section><header></header><p>'];
         // Here we split the transcript object into an array as it and only it contains all the punctuation!
         var transcriptData = data.transcript.replaceAll("\n","\n ").split(" ");
-        var currentOffset = 0;
+
 
         $.each( data, function( key, val ) {
           if (key == "words") {
-
-            var lastEnd = 0;
-            var lastStart = 0;
-            var nextStart = 0;
-            var lastEndOffset = 0;
-
+            var k = 0; // index used for transcript object
             for (var i=0; i < val.length; i++) {
-
               console.log("+");
+              var lastEnd = 0;
+              var nextStart = 0;
 
               //as the transcript object contains words that are not always in the word array we need to check they match
 
-              /*while (removeNewlines(removePunctuation(transcriptData[k])) != val[i].word) {
+              while (removeNewlines(removePunctuation(transcriptData[k])) != val[i].word) {
 
+                // check for special case where 2 words get merged
 
-              }*/
+                var sanitisedTranscriptData = removeNewlines(removePunctuation(transcriptData[k]));
 
-              // maintain newlines from the submitted transcript
-
-
-
-              if(val[i].startOffset > currentOffset) {
-                var thisWord = removeNewlines(data.transcript.slice(currentOffset,val[i].startOffset));
-                if (thisWord != " ") {
-                  items.push( '<a data-d="100" data-m="' + lastStart + '">' + thisWord + ' </a>' );
+                //searching for double words
+                if (i < (val.length - 1) && (val[i].word + val[i+1].word) == sanitisedTranscriptData) {
+                  console.log("JOINED DOUBLE WORD FOUND");
+                  console.log(val[i].word + val[i+1].word);
+                  i = i + 1;
+                  break;
                 }
-                currentOffset = val[i].startOffset;
-              }
 
-              currentOffset = val[i].endOffset;
-
-              if (i > 0) {
-                var lookAhead = data.transcript.slice(val[i-1].endOffset+1,val[i-1].endOffset+3);
-
-                if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
-                  items.push("</p><p>");
+                //searching for triple words
+                if (i < (val.length - 2) && (val[i].word + val[i+1].word + val[i+2].word) == sanitisedTranscriptData) {
+                  console.log("JOINED TRIPLE WORD FOUND");
+                  console.log(val[i].word + val[i+1].word + val[i+2].word);
+                  i = i + 2;
+                  break;
                 }
-              }
 
+                console.log("i=" + i + " k= " + k);
+                console.log("-"+val[i].word+"- != -" + removeNewlines(removePunctuation(transcriptData[k])) + "-");
+                console.log("word in transcript but not in word array");
+                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + removeNewlines(transcriptData[k]) + ' </a>' );
+                k++;
+              }
 
               if (val[i].case == "success") {
                 var duration = Math.round(val[i].end * 1000) - Math.round(val[i].start * 1000);
-
-                var magicSpace = " ";
-                //look ahead to see if the next char is a punctuation mark or
-                if (i < val.length - 1 && val[i+1].startOffset > currentOffset) {
-                  var lookAheadText = removeNewlines(data.transcript.slice(currentOffset,val[i+1].startOffset));
-
-                  if (lookAheadText.indexOf(".") >= 0 || lookAheadText.indexOf(",") >= 0 || lookAheadText.indexOf(";") >= 0 || lookAheadText.indexOf(":") >= 0 || lookAheadText.indexOf("!") >= 0 || lookAheadText.indexOf("?") >= 0) {
-                    magicSpace = "";
-                  }
-                  lastStart = Math.round(val[i].start * 1000);
-                }
-
-                items.push( '<a data-d="' + duration + '" data-m="' + Math.round(val[i].start * 1000) + '">' + data.transcript.slice(val[i].startOffset,val[i].endOffset) + magicSpace + '</a>' );
-                lastEnd = Math.round(val[i].end * 1000);
-              } else { //not-found-in-audio
+                items.push( '<a data-d="' + duration + '" data-m="' + Math.round(val[i].start * 1000) + '">' + removeNewlines(transcriptData[k]) + ' </a>' );
+                lastEnd = val[i].end * 1000;
+              } else {
                 //check for next start time - we'll use this to calculate the duration of a non-timed word
                 var j = i;
                 while (j < (val.length - 1)) {
@@ -335,12 +320,17 @@ $(document).ready(function(){
                     break;
                   }
                 }
-
-                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + data.transcript.slice(val[i].startOffset,val[i].endOffset) + ' </a>' );
-
+                console.log("no timing");
+                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + removeNewlines(transcriptData[k]) + ' </a>' );
               }
 
+              // maintain newlines from the submitted transcript
 
+              if (transcriptData[i].indexOf('\n') >= 0) { // contains a newline
+                items.push("</p><p>");
+              }
+
+              k++;
             }
           }
 
