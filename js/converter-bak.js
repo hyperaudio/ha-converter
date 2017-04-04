@@ -218,14 +218,9 @@ $(document).ready(function(){
     return s.replaceAll('\n','').replaceAll('\r','');
   }
 
-  function replaceNewlinesWithSpaces(s) {
-    return s.replaceAll('\n',' ').replaceAll('\r',' ');
+  function removePunctuation(s) {
+    return s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()@"\+\?><\[\]\+]/g, '');
   }
-
-  function addSpaceToNewlines(s) {
-    return s.replaceAll('\n','\n ');
-  }
-
 
   $('#transform').click(function() {
 
@@ -300,26 +295,10 @@ $(document).ready(function(){
 
 
               if(val[i].startOffset > currentOffset) {
-                console.log("rawtext = "+data.transcript.slice(currentOffset,val[i].startOffset)+"===================");
-                var rawText = addSpaceToNewlines(data.transcript.slice(currentOffset,val[i].startOffset)).split(" ");
-              //  console.dir("rawText array="+rawText);
-
-                for (var k = 0; k < rawText.length; k++) {
-                  if (rawText[k] != " ") {
-                    console.log("rawText["+k+"] = "+ rawText[k]);
-                    items.push( '<a data-d="1" data-m="' + lastStart + k + '">' + rawText[k]+ ' </a>' );
-                    if (rawText[k].indexOf("\r") >= 0 || rawText[k].indexOf("\n") >= 0) { // contains a newline char
-                      items.push("</p><p>");
-                      console.log("END PARA RAW");
-                    }
-
-                  }
-                }
-
-                /*var thisWord = removeNewlines(data.transcript.slice(currentOffset,val[i].startOffset));
+                var thisWord = removeNewlines(data.transcript.slice(currentOffset,val[i].startOffset));
                 if (thisWord != " ") {
                   items.push( '<a data-d="100" data-m="' + lastStart + '">' + thisWord + ' </a>' );
-                }*/
+                }
                 currentOffset = val[i].startOffset;
               }
 
@@ -342,26 +321,6 @@ $(document).ready(function(){
 
                 items.push( '<a data-d="' + duration + '" data-m="' + Math.round(val[i].start * 1000) + '">' + data.transcript.slice(val[i].startOffset,val[i].endOffset) + punctuation + ' </a>' );
                 lastEnd = Math.round(val[i].end * 1000);
-
-
-                // look ahead to see where to end the paragraph in case of word being matched
-
-                if (i > 0) {
-                  console.log("timed word");
-                  console.log("val[i-1].endOffSet: "+val[i-1].endOffset);
-                  console.log("currentOffset:" +currentOffset);
-                  var lookAhead = data.transcript.slice(currentOffset+1,currentOffset+4);
-                  console.log("current word: "+data.transcript.slice(val[i].startOffset,val[i].endOffset));
-                  console.log("lookAhead="+lookAhead+"<-");
-                  console.log("lookAhead.indexOf(r)="+lookAhead.indexOf("\r"));
-                  console.log("lookAhead.indexOf(n)="+lookAhead.indexOf("\n"));
-                  if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
-                    items.push("</p><p>");
-                    console.log("END PARA MATCHED");
-                  }
-                }
-
-
               } else { //not-found-in-audio
                 //check for next start time - we'll use this to calculate the duration of a non-timed word
                 var j = i;
@@ -373,28 +332,23 @@ $(document).ready(function(){
                   }
                 }
 
-                var untimedWord = data.transcript.slice(val[i].startOffset,val[i].endOffset);
-
-                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + untimedWord + ' </a>' );
-
-                // look ahead to see where to end the paragraph in case of word not matched
-
-                /*if (i > 0) {
-                  console.log("untimed word");
-                  console.log("val[i].endOffSet: "+val[i].endOffset);
-                  console.log("currentOffset:" +currentOffset);
-                  var lookAhead = data.transcript.slice(val[i].endOffset+1,val[i].endOffset+5);
-                  console.log("current word: "+untimedWord);
-                  console.log("lookAhead="+lookAhead+"<-");
-                  if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
-                    items.push("</p><p>");
-                    console.log("END PARA NON MATCHED WORD");
-                  }
-                }*/
+                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + data.transcript.slice(val[i].startOffset,val[i].endOffset) + ' </a>' );
 
               }
 
+              // look ahead to see where to end the paragraph
 
+              if (i > 0) {
+                console.log("val[i-1].endOffSet: "+val[i-1].endOffset);
+                console.log("currentOffset:" +currentOffset);
+                var lookAhead = data.transcript.slice(currentOffset+1,currentOffset+5);
+                console.log("current word: "+data.transcript.slice(val[i].startOffset,val[i].endOffset));
+                console.log("lookAhead="+lookAhead+"<-");
+                if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
+
+                  items.push("</p><p>");
+                }
+              }
 
 
             }
