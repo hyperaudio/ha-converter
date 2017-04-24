@@ -265,146 +265,92 @@ $(document).ready(function(){
 
 
       case 'gentle':
-        console.log("processing gentle");
-        console.log("testing new lines and dead words");
+
         var data = JSON.parse(input);
-        var items = ['<article><header></header><section><header></header><p>'];
-        // Here we split the transcript object into an array as it and only it contains all the punctuation!
-        var transcriptData = data.transcript.replaceAll("\n","\n ").split(" ");
+
+        wds = data['words'] || [];
+        transcript = data['transcript'];
+
+        console.dir(data);
+        console.dir(data['words']);
+        console.dir(data['transcript']);
+
+        $trans = document.createElement("p");
+
+        //$trans = document.getElementById("htranscript");
+        console.log($trans);
+        $trans.innerHTML = '';
+
         var currentOffset = 0;
+        var wordCounter = 0;
 
+        wds.forEach(function(wd) {
 
-        $.each( data, function( key, val ) {
-          if (key == "words") {
-
-            var lastEnd = 0;
-            var lastStart = 0;
-            var nextStart = 0;
-            var lastEndOffset = 0;
-
-            for (var i=0; i < val.length; i++) {
-
-              console.log("+");
-
-              //as the transcript object contains words that are not always in the word array we need to check they match
-
-              /*while (removeNewlines(removePunctuation(transcriptData[k])) != val[i].word) {
-
-
-              }*/
-
-              // maintain newlines from the submitted transcript
-
-
-
-
-
-              if(val[i].startOffset > currentOffset) {
-                console.log("rawtext = "+data.transcript.slice(currentOffset,val[i].startOffset)+"===================");
-                var rawText = addSpaceToNewlines(data.transcript.slice(currentOffset,val[i].startOffset)).split(" ");
-              //  console.dir("rawText array="+rawText);
-
-                for (var k = 0; k < rawText.length; k++) {
-                  if (rawText[k] != " ") {
-                    console.log("rawText["+k+"] = "+ rawText[k]);
-                    items.push( '<a data-d="1" data-m="' + lastStart + k + '">' + rawText[k]+ ' </a>' );
-                    if (rawText[k].indexOf("\r") >= 0 || rawText[k].indexOf("\n") >= 0) { // contains a newline char
-                      items.push("</p><p>");
-                      console.log("END PARA RAW");
-                    }
-
-                  }
-                }
-
-                /*var thisWord = removeNewlines(data.transcript.slice(currentOffset,val[i].startOffset));
-                if (thisWord != " ") {
-                  items.push( '<a data-d="100" data-m="' + lastStart + '">' + thisWord + ' </a>' );
-                }*/
-                currentOffset = val[i].startOffset;
+          // Add non-linked text
+          if(wd.startOffset > currentOffset) {
+              var txt = transcript.slice(currentOffset, wd.startOffset);
+              var $plaintext = document.createTextNode(txt);
+              //console.log("lastChild");
+              //console.dir($trans.lastChild);
+              if ($trans.lastChild) {
+                //$trans.lastChild.appendChild($plaintext);
+                $trans.lastChild.text += txt;
+              } else {
+                $trans.appendChild($plaintext);
               }
-
-              currentOffset = val[i].endOffset;
-
-              if (val[i].case == "success") {
-                var duration = Math.round(val[i].end * 1000) - Math.round(val[i].start * 1000);
-                var punctuation = "";
-
-                //look ahead to see if the next char is a punctuation mark
-                if (i < val.length - 1 && val[i+1].startOffset > currentOffset) {
-                  var lookAheadText = removeNewlines(data.transcript.slice(currentOffset,val[i+1].startOffset));
-
-                  if (lookAheadText.indexOf(".") >= 0 || lookAheadText.indexOf(",") >= 0 || lookAheadText.indexOf(";") >= 0 || lookAheadText.indexOf(":") >= 0 || lookAheadText.indexOf("!") >= 0 || lookAheadText.indexOf("?") >= 0) {
-                    punctuation = lookAheadText[0];
-                    currentOffset++;
-                  }
-                  lastStart = Math.round(val[i].start * 1000);
-                }
-
-                items.push( '<a data-d="' + duration + '" data-m="' + Math.round(val[i].start * 1000) + '">' + data.transcript.slice(val[i].startOffset,val[i].endOffset) + punctuation + ' </a>' );
-                lastEnd = Math.round(val[i].end * 1000);
-
-
-                // look ahead to see where to end the paragraph in case of word being matched
-
-                if (i > 0) {
-                  console.log("timed word");
-                  console.log("val[i-1].endOffSet: "+val[i-1].endOffset);
-                  console.log("currentOffset:" +currentOffset);
-                  var lookAhead = data.transcript.slice(currentOffset+1,currentOffset+4);
-                  console.log("current word: "+data.transcript.slice(val[i].startOffset,val[i].endOffset));
-                  console.log("lookAhead="+lookAhead+"<-");
-                  console.log("lookAhead.indexOf(r)="+lookAhead.indexOf("\r"));
-                  console.log("lookAhead.indexOf(n)="+lookAhead.indexOf("\n"));
-                  if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
-                    items.push("</p><p>");
-                    console.log("END PARA MATCHED");
-                  }
-                }
-
-
-              } else { //not-found-in-audio
-                //check for next start time - we'll use this to calculate the duration of a non-timed word
-                var j = i;
-                while (j < (val.length - 1)) {
-                  j++;
-                  if (val[j].case == "success") {
-                    nextStart = Math.round(val[j].start * 1000);
-                    break;
-                  }
-                }
-
-                var untimedWord = data.transcript.slice(val[i].startOffset,val[i].endOffset);
-
-                items.push( '<a data-d="' + (nextStart - lastEnd) + '" data-m="' + lastEnd + '">' + untimedWord + ' </a>' );
-
-                // look ahead to see where to end the paragraph in case of word not matched
-
-                /*if (i > 0) {
-                  console.log("untimed word");
-                  console.log("val[i].endOffSet: "+val[i].endOffset);
-                  console.log("currentOffset:" +currentOffset);
-                  var lookAhead = data.transcript.slice(val[i].endOffset+1,val[i].endOffset+5);
-                  console.log("current word: "+untimedWord);
-                  console.log("lookAhead="+lookAhead+"<-");
-                  if (lookAhead.indexOf("\r") >= 0 || lookAhead.indexOf("\n") >= 0) { // contains a newline char
-                    items.push("</p><p>");
-                    console.log("END PARA NON MATCHED WORD");
-                  }
-                }*/
-
-              }
-
-
-
-
-            }
+              //$trans.appendChild($plaintext);
+              currentOffset = wd.startOffset;
           }
 
+          var $wd = document.createElement('a');
+          var txt = transcript.slice(wd.startOffset, wd.endOffset);
+          var $wdText = document.createTextNode(txt);
+          $wd.appendChild($wdText);
+          wd.$div = $wd;
+
+          var datam = document.createAttribute('data-m');
+          var datad = document.createAttribute('data-d');
+
+          if(wd.start !== undefined) {
+              //$wd.className = 'success';
+
+              datam.value = Math.floor(wd.start*1000);
+              datad.value = Math.floor((wd.end - wd.start)*1000);
+
+          } else {
+            // look ahead to the next timed word
+            for (var i = wordCounter; i < (wds.length - 1); i++) {
+              if (wds[i+1].start !== undefined) {
+                datam.value = Math.floor(wds[i+1].start*1000);
+                break;
+              }
+            }
+            datad.value = "100"; // default duration when not known
+          }
+
+          $wd.setAttributeNode(datam);
+          $wd.setAttributeNode(datad);
+
+          $trans.appendChild($wd);
+          currentOffset = wd.endOffset;
+          wordCounter++;
         });
 
-        items.push('</p><footer></footer></section></footer></footer></article>');
-        ht = items.join( "" );
-        console.log("done");
+        var txt = transcript.slice(currentOffset, transcript.length);
+        var $plaintext = document.createTextNode(txt);
+        $trans.appendChild($plaintext);
+        currentOffset = transcript.length;
+        console.log($trans);
+        $article = document.createElement("article");
+        $section = document.createElement("section");
+        $header = document.createElement("header");
+
+        $section.appendChild($trans);
+        $article.appendChild($section);
+
+        ht = $article.outerHTML;
+        ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+        console.dir(ht);
         break;
 
       case 'srt':
