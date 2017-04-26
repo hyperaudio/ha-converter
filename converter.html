@@ -8,19 +8,19 @@
   <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
   <style type="text/css">
     .wrapper {
-      width: 980px; 
+      width: 980px;
       background: #ffffff;
-      margin: 0 auto; 
+      margin: 0 auto;
     }
 
     .header {
-      background: black; 
-      color: white; 
+      background: black;
+      color: white;
     }
 
     .holder {
       margin-top: 50px;
-      width: 50%; 
+      width: 50%;
       float: left;
       background: #ffffff;
     }
@@ -35,21 +35,21 @@
     .footer {
       height: 10px;
       background: #ffffff;
-      clear: both; 
+      clear: both;
     }
 
-    textarea, #rtranscript { 
+    textarea, #rtranscript {
       margin-left:10px;
-      padding: 10px; 
-      outline: 2px dashed #2c3e50; 
+      padding: 10px;
+      outline: 2px dashed #2c3e50;
       border: none;margin-top:10px;
     }
 
-    textarea:hover { 
-      outline: 2px dashed #2c3e50; 
+    textarea:hover {
+      outline: 2px dashed #2c3e50;
       border: none;
     }
-    
+
     .tab {
       border: solid;
       border-width:1px;
@@ -105,7 +105,7 @@
     }
 
   </style>
-  
+
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
   <script type="text/javascript" src="js/converter.js"></script>
   <!--<link rel="stylesheet" type="text/css" href="lib/shepherd/css/shepherd-theme-hyperaudio.css" />-->
@@ -122,14 +122,22 @@
 
   <div class="holder">
     <div class="instructions">
-      
+
       <h2>Convert formats into a hypertranscript.</h2>
-      <p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a> or <a href="http://speechmatics.com">Speechmatics</a> JSON into the pane below and press the transform button.</p>
+      <p>Paste your <a href="http://en.wikipedia.org/wiki/.srt#SubRip_text_file_format">SRT (subtitle) file</a>, <a href="http://speechmatics.com">Speechmatics</a> JSON or <a href="https://lowerquality.com/gentle/">Gentle</a> JSON into the pane below and press the transform button.</p>
       <form>
         <!--<p><input id="line-breaks" type="checkbox" name="linebreaks" value="on"> Line breaks in output?</p>-->
-            <p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account?</p>
+        <p>
+        Input Format :
+        <select id="format-select">
+          <option value="srt">SRT formatted captions</option>
+          <option value="speechmatics">Speechmatics JSON</option>
+          <option value="gentle">Gentle JSON</option>
+        </select>
+        </p>
+        <p><input id="word-length" type="checkbox" name="wordlength" value="on"> Take word-length into account when calculating from SRT?</p>
       </form>
-      <h3 id="srt-title" class="entry-title">Paste SRT formatted subtitles<br/> or <a href="http://speechmatics.com">Speechmatics</a> JSON here ⤵</h3>
+      <h3 id="srt-title" class="entry-title">Paste here ⤵</h3>
     </div>
 
     <div class="source-content">
@@ -139,7 +147,7 @@
 
   <div class="holder">
     <div class="instructions">
-      
+
         <form class="controls">
             <p style="margin-top:16px">Paragraph split on delay:</p>
             <p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
@@ -165,12 +173,12 @@
 
 $(document).ready(function() {
 
-	
+
   var namespace = null;
   if (document.location.hostname.indexOf('hyperaud') > 0) {
     namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
   }
-  
+
   var prefix = '';
   if (namespace) prefix = namespace + '.';
 
@@ -195,12 +203,12 @@ $(document).ready(function() {
       //console.log(t.content);
       if (t.type == "srt") {
         $('#subtitles').text(t.content);
-      } 
+      }
 
       if (t.type == "html") {
         $('#htranscript').text(t.content);
       }
-      
+
     });
   }
 
@@ -221,7 +229,7 @@ $(document).ready(function() {
     });
   }
 
-  
+
 
   var user;
   function whoami(callback) {
@@ -250,7 +258,7 @@ $(document).ready(function() {
       xhrFields: {
         withCredentials: true
       },
-        crossDomain: true 
+        crossDomain: true
     });
   }
 

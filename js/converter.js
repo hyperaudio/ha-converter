@@ -20,7 +20,7 @@ $(document).ready(function(){
     return false;
   });
 
-  $('#rendered-view').click(function(){ 
+  $('#rendered-view').click(function(){
     $('#rtranscript').html($('#htranscript').val());
     $('#markup-view').addClass('inactive');
     $(this).removeClass('inactive');
@@ -31,9 +31,9 @@ $(document).ready(function(){
     document.dispatchEvent(event);
     return false;
   });
-  
+
   // From popcorn.parserSRT.js
-  
+
   function parseSRT(data) {
 
     var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Function","action":"parseSRT init"}});
@@ -79,7 +79,7 @@ $(document).ready(function(){
     len = lines.length;
 
     for( i=0; i < len; i++ ) {
-      
+
       sub = {};
       text = [];
 
@@ -139,7 +139,7 @@ $(document).ready(function(){
       var stimeStep = sduration/swords.length;
 
       // determine length of words
-      
+
       var swordLengths = [];
       var swordTimes = [];
 
@@ -151,7 +151,7 @@ $(document).ready(function(){
 
       var letterTime = sduration / totalLetters;
       var wordStart = 0;
-      
+
       for (var si=0, sl=swords.length; si<sl; ++si) {
         var wordTime = swordLengths[si]*letterTime;
         var stime;
@@ -164,12 +164,12 @@ $(document).ready(function(){
           var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Setting","action":"Word length split OFF"}});
           document.dispatchEvent(event);
         }
-        
+
         wordStart = wordStart + wordTime;
         var stext = swords[si];
         //var ssafeText = stext.replace('"', '\\"');
         //outputString += '<span m="'+stime+'" oval="'+ssafeText+'">'+stext+'</span> '+'\n';
-        
+
         /*console.log("stime");
         console.log(stime);
         console.log("ltime");
@@ -193,57 +193,162 @@ $(document).ready(function(){
 
         if (lineBreaks) outputString = outputString + '\n';
       }
-      
+
     }
     return outputString + "</p><footer></footer></section></footer></footer></article>";
     var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Function","action":"parseSRT finished"}});
     document.dispatchEvent(event);
   }
-  
 
-  /*$.get('test.srt', function(data) {    
-    console.log(data);
-    console.log(parseSRT(data));
-  });*/
-  
+
   $('#transform').click(function() {
 
     $('.transform-spinner').show();
-    
+
     var input = $('#subtitles').val();
     /*var regex = /<br\s*[\/]?>/gi;
     srt = srt.replace(regex,'\n');
-    regex = /&gt;/gi; 
+    regex = /&gt;/gi;
     srt = srt.replace(regex,'>');
     //console.log(srt);*/
 
     var ht;
 
-    if (input[0] == '{') {
-      var data = JSON.parse(input);
-      var items = ['<article><header></header><section><header></header><p>'];
-      $.each( data, function( key, val ) {
-        if (key == "words") {
-          for (var i=0; i < val.length; i++) {
-            items.push( '<a data-d="' + Math.round(val[i].duration * 1000) + '" data-c="' + val[i].confidence + '" data-m="' + Math.round(val[i].time * 1000) + '">' + val[i].name + ' </a>' );
-          }
-        }
-      });
+    var format = $( "#format-select" ).val();
+    console.log("format="+format);
 
-      items.push('</p><footer></footer></section></footer></footer></article>');
-   
-      $( "<article/>", {
-        html: items.join( "" )
-      }).appendTo( "body" );
-      ht = items.join( "" );
-    } else {
-      ht = parseSRT(input);
+    switch (format) {
+      case 'speechmatics':
+        var data = JSON.parse(input);
+        var items = ['<article><header></header><section><header></header><p>'];
+        $.each( data, function( key, val ) {
+          if (key == "words") {
+            for (var i=0; i < val.length; i++) {
+              items.push( '<a data-d="' + Math.round(val[i].duration * 1000) + '" data-c="' + val[i].confidence + '" data-m="' + Math.round(val[i].time * 1000) + '">' + val[i].name + ' </a>' );
+            }
+          }
+        });
+
+        items.push('</p><footer></footer></section></footer></footer></article>');
+
+        /*$( "<article/>", {
+          html: items.join( "" )
+        }).appendTo( "body" );*/
+        ht = items.join( "" );
+        break;
+
+
+      case 'gentle':
+
+        var data = JSON.parse(input);
+
+        wds = data['words'] || [];
+        transcript = data['transcript'];
+
+        console.dir(data);
+        console.dir(data['words']);
+        console.dir(data['transcript']);
+
+        $trans = document.createElement("p");
+
+        //$trans = document.getElementById("htranscript");
+        console.log($trans);
+        $trans.innerHTML = '';
+
+        var currentOffset = 0;
+        var wordCounter = 0;
+
+        wds.forEach(function(wd) {
+
+          // Add non-linked text
+          if(wd.startOffset > currentOffset) {
+              var txt = transcript.slice(currentOffset, wd.startOffset);
+              var $plaintext = document.createTextNode(txt);
+              //console.log("lastChild");
+              //console.dir($trans.lastChild);
+              if ($trans.lastChild) {
+                //$trans.lastChild.appendChild($plaintext);
+                $trans.lastChild.text += txt;
+              } else {
+                // this happens only at the beginning
+                var anchor = document.createElement('a');
+                var initialDatam = document.createAttribute('data-m');
+                var initialDatad = document.createAttribute('data-d');
+                anchor.appendChild($plaintext);
+                initialDatam.value = 0;
+                initialDatad.value = 0;
+                anchor.setAttributeNode(initialDatam);
+                anchor.setAttributeNode(initialDatad);
+                $trans.appendChild(anchor);
+              }
+              //$trans.appendChild($plaintext);
+              currentOffset = wd.startOffset;
+          }
+
+          var datam = document.createAttribute('data-m');
+          var datad = document.createAttribute('data-d');
+
+          var $wd = document.createElement('a');
+          var txt = transcript.slice(wd.startOffset, wd.endOffset);
+          var $wdText = document.createTextNode(txt);
+          $wd.appendChild($wdText);
+          wd.$div = $wd;
+
+          if(wd.start !== undefined) {
+              //$wd.className = 'success';
+
+              datam.value = Math.floor(wd.start*1000);
+              datad.value = Math.floor((wd.end - wd.start)*1000);
+
+          } else {
+            // look ahead to the next timed word
+            for (var i = wordCounter; i < (wds.length - 1); i++) {
+              if (wds[i+1].start !== undefined) {
+                datam.value = Math.floor(wds[i+1].start*1000);
+                break;
+              }
+            }
+            datad.value = "100"; // default duration when not known
+          }
+
+          $wd.setAttributeNode(datam);
+          $wd.setAttributeNode(datad);
+
+          $trans.appendChild($wd);
+          currentOffset = wd.endOffset;
+          wordCounter++;
+        });
+
+        var txt = transcript.slice(currentOffset, transcript.length);
+        var $plaintext = document.createTextNode(txt);
+        $trans.appendChild($plaintext);
+        currentOffset = transcript.length;
+        console.log($trans);
+        $article = document.createElement("article");
+        $section = document.createElement("section");
+        $header = document.createElement("header");
+
+        $section.appendChild($trans);
+        $article.appendChild($section);
+
+        ht = $article.outerHTML;
+        ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+
+        // replace all unneeded empty paras
+        ht = ht.replace(new RegExp('<p></p>', 'g'), '');
+
+        console.dir(ht);
+        break;
+
+      case 'srt':
+        ht = parseSRT(input);
+        break;
     }
-    
-    
+
+
     /*ht = ht.replace(/\r\n|\r|\n/gi, '<br/>');   */
-      
-    $('#htranscript').val(ht); 
+
+    $('#htranscript').val(ht);
     $('#rtranscript').html(ht);
     //console.log($('#subtitles').text());
 
