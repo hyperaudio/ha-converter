@@ -201,32 +201,6 @@ $(document).ready(function(){
   }
 
 
-  /*$.get('test.srt', function(data) {
-    console.log(data);
-    console.log(parseSRT(data));
-  });*/
-
-  // http://stackoverflow.com/questions/1144783/how-to-replace-all-occurrences-of-a-string-in-javascript
-  // Using the slower version because I want to use reserved regexp characters
-
-  String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-  };
-
-  function removeNewlines(s) {
-    return s.replaceAll('\n','').replaceAll('\r','');
-  }
-
-  function replaceNewlinesWithSpaces(s) {
-    return s.replaceAll('\n',' ').replaceAll('\r',' ');
-  }
-
-  function addSpaceToNewlines(s) {
-    return s.replaceAll('\n','\n ');
-  }
-
-
   $('#transform').click(function() {
 
     $('.transform-spinner').show();
@@ -296,20 +270,29 @@ $(document).ready(function(){
                 //$trans.lastChild.appendChild($plaintext);
                 $trans.lastChild.text += txt;
               } else {
-                $trans.appendChild($plaintext);
+                // this happens only at the beginning
+                var anchor = document.createElement('a');
+                var initialDatam = document.createAttribute('data-m');
+                var initialDatad = document.createAttribute('data-d');
+                anchor.appendChild($plaintext);
+                initialDatam.value = 0;
+                initialDatad.value = 0;
+                anchor.setAttributeNode(initialDatam);
+                anchor.setAttributeNode(initialDatad);
+                $trans.appendChild(anchor);
               }
               //$trans.appendChild($plaintext);
               currentOffset = wd.startOffset;
           }
+
+          var datam = document.createAttribute('data-m');
+          var datad = document.createAttribute('data-d');
 
           var $wd = document.createElement('a');
           var txt = transcript.slice(wd.startOffset, wd.endOffset);
           var $wdText = document.createTextNode(txt);
           $wd.appendChild($wdText);
           wd.$div = $wd;
-
-          var datam = document.createAttribute('data-m');
-          var datad = document.createAttribute('data-d');
 
           if(wd.start !== undefined) {
               //$wd.className = 'success';
@@ -350,6 +333,10 @@ $(document).ready(function(){
 
         ht = $article.outerHTML;
         ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+
+        // replace all unneeded empty paras
+        ht = ht.replace(new RegExp('<p></p>', 'g'), '');
+
         console.dir(ht);
         break;
 
