@@ -32,6 +32,11 @@ $(document).ready(function(){
     return false;
   });
 
+  String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+  };
+
   // From popcorn.parserSRT.js
 
   function parseSRT(data) {
@@ -295,11 +300,8 @@ $(document).ready(function(){
           wd.$div = $wd;
 
           if(wd.start !== undefined) {
-              //$wd.className = 'success';
-
-              datam.value = Math.floor(wd.start*1000);
-              datad.value = Math.floor((wd.end - wd.start)*1000);
-
+            datam.value = Math.floor(wd.start*1000);
+            datad.value = Math.floor((wd.end - wd.start)*1000);
           } else {
             // look ahead to the next timed word
             for (var i = wordCounter; i < (wds.length - 1); i++) {
@@ -323,7 +325,7 @@ $(document).ready(function(){
         var $plaintext = document.createTextNode(txt);
         $trans.appendChild($plaintext);
         currentOffset = transcript.length;
-        console.log($trans);
+
         $article = document.createElement("article");
         $section = document.createElement("section");
         $header = document.createElement("header");
@@ -343,6 +345,36 @@ $(document).ready(function(){
       case 'srt':
         ht = parseSRT(input);
         break;
+
+      case 'other':
+        var xmlString = input
+          , parser = new DOMParser()
+          , doc = parser.parseFromString(xmlString, "text/xml");
+
+
+        var transcript = doc.getElementsByTagName('section')[0];
+
+        for (var i = 0; i < doc.getElementsByClassName("speaker").length; i++ ) {
+          transcript.getElementsByClassName("speaker")[i].innerHTML = "["+transcript.getElementsByClassName("speaker")[i].innerHTML.replace(": ","")+"]:";
+          var datam = document.createAttribute('data-m');
+          var datad = document.createAttribute('data-d');
+          datam.value = transcript.getElementsByClassName("speaker")[i].nextElementSibling.getAttribute("data-m");
+          datad.value = "1";
+          transcript.getElementsByClassName("speaker")[i].setAttributeNode(datam);
+          transcript.getElementsByClassName("speaker")[i].setAttributeNode(datad);
+        }
+        //console.log(transcript);
+
+        var transcriptText = transcript.outerHTML;
+        transcriptText = transcriptText.replaceAll('<span','<a');
+        transcriptText = transcriptText.replaceAll('</span>','</a>');
+
+        ht = "<article>" + transcriptText + "</article>";
+
+        //console.log(ht);
+
+        //str = str.replace(/<title>[\s\S]*?<\/title>/, '<title>' + newTitle + '<\/title>');
+
     }
 
 
