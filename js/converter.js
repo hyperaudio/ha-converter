@@ -355,7 +355,7 @@ $(document).ready(function(){
         var transcript = doc.getElementsByTagName('section')[0];
 
         for (var i = 0; i < doc.getElementsByClassName("speaker").length; i++ ) {
-          transcript.getElementsByClassName("speaker")[i].innerHTML = "["+transcript.getElementsByClassName("speaker")[i].innerHTML.replace(": ","")+"]:";
+          transcript.getElementsByClassName("speaker")[i].innerHTML = "["+transcript.getElementsByClassName("speaker")[i].innerHTML.replace(": ","")+"] ";
           var datam = document.createAttribute('data-m');
           var datad = document.createAttribute('data-d');
           datam.value = transcript.getElementsByClassName("speaker")[i].nextElementSibling.getAttribute("data-m");
