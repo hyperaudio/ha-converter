@@ -266,19 +266,27 @@ $(document).ready(function(){
         wds.forEach(function(wd) {
 
           // Add non-linked text
+
+          var newlineDetected = false;
+
           if(wd.startOffset > currentOffset) {
               var txt = transcript.slice(currentOffset, wd.startOffset);
+              newlineDetected = /\r|\n/.exec(txt);
+
               var $plaintext = document.createTextNode(txt);
               //console.log("lastChild");
               //console.dir($trans.lastChild);
               if ($trans.lastChild) {
                 //$trans.lastChild.appendChild($plaintext);
                 $trans.lastChild.text += txt;
+
               } else {
                 // this happens only at the beginning
                 var anchor = document.createElement('a');
                 var initialDatam = document.createAttribute('data-m');
                 var initialDatad = document.createAttribute('data-d');
+                console.log("initialDatam = "+initialDatam);
+                console.log("initialDatad = "+initialDatad);
                 anchor.appendChild($plaintext);
                 initialDatam.value = 0;
                 initialDatad.value = 0;
@@ -287,6 +295,10 @@ $(document).ready(function(){
                 $trans.appendChild(anchor);
               }
               //$trans.appendChild($plaintext);
+              if (newlineDetected) {
+                var lineBreak = document.createElement('br');
+                $trans.appendChild(lineBreak);
+              }
               currentOffset = wd.startOffset;
           }
 
@@ -297,6 +309,7 @@ $(document).ready(function(){
           var txt = transcript.slice(wd.startOffset, wd.endOffset);
           var $wdText = document.createTextNode(txt);
           $wd.appendChild($wdText);
+
           wd.$div = $wd;
 
           if(wd.start !== undefined) {
@@ -334,7 +347,9 @@ $(document).ready(function(){
         $article.appendChild($section);
 
         ht = $article.outerHTML;
-        ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+        //ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+
+        ht = ht.replace(new RegExp('</a><br>', 'g'), '</a></p><p>');
 
         // replace all unneeded empty paras
         ht = ht.replace(new RegExp('<p></p>', 'g'), '');
