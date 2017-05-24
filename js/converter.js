@@ -250,14 +250,9 @@ $(document).ready(function(){
         wds = data['words'] || [];
         transcript = data['transcript'];
 
-        console.dir(data);
-        console.dir(data['words']);
-        console.dir(data['transcript']);
-
         $trans = document.createElement("p");
 
         //$trans = document.getElementById("htranscript");
-        console.log($trans);
         $trans.innerHTML = '';
 
         var currentOffset = 0;
@@ -285,8 +280,7 @@ $(document).ready(function(){
                 var anchor = document.createElement('a');
                 var initialDatam = document.createAttribute('data-m');
                 var initialDatad = document.createAttribute('data-d');
-                console.log("initialDatam = "+initialDatam);
-                console.log("initialDatad = "+initialDatad);
+
                 anchor.appendChild($plaintext);
                 initialDatam.value = 0;
                 initialDatad.value = 0;
@@ -347,7 +341,9 @@ $(document).ready(function(){
         $article.appendChild($section);
 
         ht = $article.outerHTML;
-        //ht = ht.replace(/(?:\r\n|\r|\n)/g, '</p>\n<p>');
+
+        //newlines can cause issues within HTML tags
+        ht = ht.replace(/(?:\r\n|\r|\n)/g, '');
 
         ht = ht.replace(new RegExp('</a><br>', 'g'), '</a></p><p>');
 
