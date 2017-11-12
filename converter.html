@@ -192,6 +192,14 @@ $(document).ready(function() {
 
   var API = 'https://' + prefix + 'api.' + domain + '/v1';
 
+  $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+    if (options.url.indexOf(API) == 0) {
+      if (window.localStorage.getItem('token')) {
+        jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.localStorage.getItem('token'));
+      }
+    }
+  });
+
   var mediaObject;
   var mediaID = purl(window.top.document.location.href).param('m');
   var transcriptID = purl(window.top.document.location.href).param('t');
