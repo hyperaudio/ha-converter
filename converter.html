@@ -190,7 +190,7 @@ $(document).ready(function() {
     domain = 'hyperaudio.net';
   }
 
-  var API = 'http://' + prefix + 'api.' + domain + '/v1';
+  var API = 'https://' + prefix + 'api.' + domain + '/v1';
 
   var mediaObject;
   var mediaID = purl(window.top.document.location.href).param('m');
@@ -234,7 +234,7 @@ $(document).ready(function() {
 
   var user;
   function whoami(callback) {
-    $.ajax(API+'/whoami', {
+    $.ajax(API+'/auth/whoami/' + window.localStorage.getItem('token'), {
      type: "GET",
      contentType: "application/json; charset=utf-8",
      success: function(whoami) {
@@ -276,7 +276,7 @@ $(document).ready(function() {
       if (user) {
         //
         if (transcriptObject) {
-            $.ajax( API+'/' + user + '/transcripts/' + transcriptObject._id, {
+            $.ajax( API+'/transcripts/' + transcriptObject._id, {
               type: "PUT",
               contentType: "application/json; charset=utf-8",
               dataType: "json",
@@ -312,7 +312,7 @@ $(document).ready(function() {
               crossDomain: true
             });
         } else {
-          $.ajax( API+'/' + user + '/transcripts', {
+          $.ajax( API+'/transcripts', {
             type: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
