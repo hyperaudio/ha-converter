@@ -1,10 +1,10 @@
-
 $(document).ready(function() {
-
-
   var namespace = null;
   if (document.location.hostname.indexOf('hyperaud') > 0) {
-    namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+    namespace = document.location.hostname.substring(
+      0,
+      document.location.hostname.indexOf('hyperaud') - 1
+    );
   }
 
   var prefix = '';
@@ -19,7 +19,7 @@ $(document).ready(function() {
 
   var API = 'https://' + prefix + 'api.' + domain + '/v1';
 
-  $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+  $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     if (options.url.indexOf(API) == 0) {
       if (window.localStorage.getItem('token')) {
         jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.localStorage.getItem('token'));
@@ -37,17 +37,15 @@ $(document).ready(function() {
       mediaObject = t.media;
       mediaID = mediaObject._id;
       //console.log(t.content);
-      if (t.type == "srt") {
+      if (t.type == 'srt') {
         $('#subtitles').text(t.content);
       }
 
-      if (t.type == "html") {
+      if (t.type == 'html') {
         $('#htranscript').text(t.content);
       }
-
     });
   }
-
 
   // MB adding check to see if param is present
 
@@ -65,28 +63,29 @@ $(document).ready(function() {
     });
   }
 
-
-
   var user;
   function whoami(callback) {
-    $.ajax(API+'/auth/whoami/' + window.localStorage.getItem('token'), {
-     type: "GET",
-     contentType: "application/json; charset=utf-8",
-     success: function(whoami) {
+    $.ajax(API + '/auth/whoami/' + window.localStorage.getItem('token'), {
+      type: 'GET',
+      contentType: 'application/json; charset=utf-8',
+      success: function(whoami) {
         if (whoami.user) {
           // logged in
           //alert('logged in');
           user = whoami.user;
 
-          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User logged in (whoami)"}});
+          var event = new CustomEvent('ga', {
+            detail: { origin: 'HA-Converter', type: 'XHR', action: 'User logged in (whoami)' }
+          });
           document.dispatchEvent(event);
-
         } else {
           // not logged in
           //alert('NOT logged in');
           user = null;
 
-          var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"User NOT logged in (whoami)"}});
+          var event = new CustomEvent('ga', {
+            detail: { origin: 'HA-Converter', type: 'XHR', action: 'User NOT logged in (whoami)' }
+          });
           document.dispatchEvent(event);
         }
         if (callback) callback();
@@ -94,7 +93,7 @@ $(document).ready(function() {
       xhrFields: {
         withCredentials: true
       },
-        crossDomain: true
+      crossDomain: true
     });
   }
 
@@ -103,7 +102,9 @@ $(document).ready(function() {
     $('#save-button').hide();
     $('#save-button-saving').show();
 
-    var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Button","action":"Save"}});
+    var event = new CustomEvent('ga', {
+      detail: { origin: 'HA-Converter', type: 'Button', action: 'Save' }
+    });
     document.dispatchEvent(event);
 
     whoami(function() {
@@ -111,48 +112,13 @@ $(document).ready(function() {
       if (user) {
         //
         if (transcriptObject) {
-            $.ajax( API+'/transcripts/' + transcriptObject._id, {
-              type: "PUT",
-              contentType: "application/json; charset=utf-8",
-              dataType: "json",
-              data: JSON.stringify({
-                _id: transcriptObject._id,
-                label:  mediaObject?mediaObject.label:'',
-                type: 'html',
-                sort: 0,
-                owner: user,
-                content: $('#htranscript').val(),
-                media: mediaID
-              }),
-              success: function(data) {
-                transcriptObject = data;
-                //console.log(data);
-                $('#save-button-saving').hide();
-                $('#save-button').show();
-
-                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success with initial transcriptObject"}});
-                document.dispatchEvent(event);
-              },
-              error: function() {
-                $('#save-button-saving').hide();
-                $('#save-button').show();
-                alert('Save Error');
-
-                var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR with initial transcriptObject"}});
-                document.dispatchEvent(event);
-              },
-              xhrFields: {
-                withCredentials: true
-              },
-              crossDomain: true
-            });
-        } else {
-          $.ajax( API+'/transcripts', {
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
+          $.ajax(API + '/transcripts/' + transcriptObject._id, {
+            type: 'PUT',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
             data: JSON.stringify({
-              label:  mediaObject.label,
+              _id: transcriptObject._id,
+              label: mediaObject ? mediaObject.label : '',
               type: 'html',
               sort: 0,
               owner: user,
@@ -165,14 +131,73 @@ $(document).ready(function() {
               $('#save-button-saving').hide();
               $('#save-button').show();
 
-              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save success without initial transcriptObject"}});
+              var event = new CustomEvent('ga', {
+                detail: {
+                  origin: 'HA-Converter',
+                  type: 'XHR',
+                  action: 'Save success with initial transcriptObject'
+                }
+              });
               document.dispatchEvent(event);
             },
             error: function() {
               $('#save-button-saving').hide();
               $('#save-button').show();
               alert('Save Error');
-              var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"XHR","action":"Save ERROR without initial transcriptObject"}});
+
+              var event = new CustomEvent('ga', {
+                detail: {
+                  origin: 'HA-Converter',
+                  type: 'XHR',
+                  action: 'Save ERROR with initial transcriptObject'
+                }
+              });
+              document.dispatchEvent(event);
+            },
+            xhrFields: {
+              withCredentials: true
+            },
+            crossDomain: true
+          });
+        } else {
+          $.ajax(API + '/transcripts', {
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+              label: mediaObject.label,
+              type: 'html',
+              sort: 0,
+              owner: user,
+              content: $('#htranscript').val(),
+              media: mediaID
+            }),
+            success: function(data) {
+              transcriptObject = data;
+              //console.log(data);
+              $('#save-button-saving').hide();
+              $('#save-button').show();
+
+              var event = new CustomEvent('ga', {
+                detail: {
+                  origin: 'HA-Converter',
+                  type: 'XHR',
+                  action: 'Save success without initial transcriptObject'
+                }
+              });
+              document.dispatchEvent(event);
+            },
+            error: function() {
+              $('#save-button-saving').hide();
+              $('#save-button').show();
+              alert('Save Error');
+              var event = new CustomEvent('ga', {
+                detail: {
+                  origin: 'HA-Converter',
+                  type: 'XHR',
+                  action: 'Save ERROR without initial transcriptObject'
+                }
+              });
               document.dispatchEvent(event);
             },
             xhrFields: {
@@ -183,8 +208,9 @@ $(document).ready(function() {
         }
         //
       } else {
-
-        var event = new CustomEvent("ga", {"detail":{"origin":"HA-Converter","type":"Alert","action":"Please sign in to save."}});
+        var event = new CustomEvent('ga', {
+          detail: { origin: 'HA-Converter', type: 'Alert', action: 'Please sign in to save.' }
+        });
         document.dispatchEvent(event);
         alert('Please sign in to save.');
       }
