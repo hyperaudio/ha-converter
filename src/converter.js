@@ -241,6 +241,34 @@ $(document).ready(function() {
     console.log('format=' + format);
 
     switch (format) {
+        
+      case 'google':
+        var data = JSON.parse(input);
+        var items = ['<article><header></header><section><header></header><p>'];
+        $.each(data.response.results, function(key, val) {
+          $.each(val.alternatives, function(k, v) {
+            for (var i = 0; i < v.words.length; i++) {
+              items.push(
+                '<a data-d="' +
+                  Math.round(parseFloat(v.words[i].endTime) * 1000 - parseFloat(v.words[i].startTime) * 1000) +
+                  '" data-m="' +
+                  Math.round(parseFloat(v.words[i].startTime) * 1000) +
+                  '">' +
+                  v.words[i].word +
+                  ' </a>'
+              );
+            }
+          });
+        });
+
+        items.push('</p><footer></footer></section></footer></footer></article>');
+
+        /*$( "<article/>", {
+          html: items.join( "" )
+        }).appendTo( "body" );*/
+        ht = items.join('');
+        break;
+        
       case 'speechmatics':
         var data = JSON.parse(input);
         var items = ['<article><header></header><section><header></header><p>'];
