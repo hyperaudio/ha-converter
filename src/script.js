@@ -17,6 +17,17 @@ $(document).ready(function() {
     domain = 'hyperaudio.net';
   }
 
+  // Init the API utility
+  HA.api.init({
+    org: namespace, // The organisations namespace / sub-domain. EG. 'chattanooga'
+    domain: domain,
+    protocol: 'https://',
+    bgm: 'media?tag=bgm',
+    whoami: 'auth/whoami/',
+    signin: 'accounts/token',
+    withCredentials: false
+  });
+
   var API = 'https://' + prefix + 'api.' + domain + '/v1';
 
   $.ajaxPrefilter(function(options, originalOptions, jqXHR) {

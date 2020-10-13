@@ -1,4 +1,13 @@
 $(document).ready(function() {
+
+  var player = HA.Player({
+    target: '#source-video',
+    gui: {
+      navigation: false,
+      fullscreen: false
+    }
+  });
+
   var p = document.getElementById('para-split');
   var cp = document.getElementById('current-para-split');
   var paraSplitTime;
@@ -112,6 +121,9 @@ $(document).ready(function() {
       }
 
       sub.start = toSeconds(time[0]);
+
+      console.log("time");
+      console.log(time);
 
       // So as to trim positioning information from end
       if (!time[1]) {
@@ -406,6 +418,7 @@ $(document).ready(function() {
         break;
 
       case 'srt':
+        console.log(input);
         ht = parseSRT(input);
         break;
 
