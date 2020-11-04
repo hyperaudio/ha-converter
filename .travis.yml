@@ -11,6 +11,7 @@ deploy:
     acl: public_read
     upload-dir: converter
     on:
+      all_branches: true
       branch: master
   - provider: s3
     access_key_id: AKIAIS4ABNSYS5HWUFTA
