@@ -147,8 +147,8 @@
 
         <form class="controls">
             <p style="margin-top:16px">Paragraph split on delay:</p>
-            <p>0 <input id="para-split" style="width:430px" type="range" value="0" min="0.0" max="10" step="0.1"> 10<br/>
-            <span style="margin-left:200px" id="current-para-split">0</span> seconds</p>
+            <p>0 <input id="para-split" style="width:430px" type="range" value="2.0" min="0.0" max="10" step="0.1"> 10<br/>
+            <span style="margin-left:200px" id="current-para-split">2.0</span> seconds</p>
             <p><input id="para-punctuation" type="checkbox" name="wordlength" value="on"> Only split paras on text finishing with punctuation. (. ! ?)</p>
         </form>
         <p><a id="transform" href="#">Transform <img class="transform-spinner" style="display:none" src="/pad/images/ajax-loader-ffffff-on-808080.gif"></a></p>
@@ -157,7 +157,7 @@
     </div>
     <div class="target-content">
       <textarea id="htranscript" class="entry-content" rows="40" cols="54"></textarea>
-      <div style="display:none" id="rtranscript"></div>
+      <div style="display:none" id="rtranscript" contentEditable></div>
     </div>
   </div>
 
