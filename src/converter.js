@@ -243,6 +243,56 @@ $(document).ready(function() {
     var format = $('#format-select').val();
 
     switch (format) {
+
+      case 'oe':
+        var data = JSON.parse(input);
+        var items = ['<article><section>\n<p>'];
+        $.each(data.content.paragraphs, function(key, val) {
+          var paraStart = Math.round(val.start*1000);
+          items.push(
+            '\n<span class="speaker" data-m="' + paraStart + '" ' +
+            'data-d="0">' +
+              val.speaker +
+            ' </span>'
+          );
+
+          var lastStart = 0;
+
+          $.each(val.words, function(k, v) {
+            if (typeof v.start !== 'undefined') {
+              items.push(
+                '\n<span data-m="' + Math.round(v.start) + '" ' +
+                'data-d="' + Math.round(v.end - v.start) + '">' +
+                  v.text +
+                ' </span>'
+              );
+              lastStart = v.start;
+            } else {
+
+              if (k === 0) {
+                lastStart = paraStart;
+              } 
+
+              items.push(
+                '\n<span data-m="' + lastStart + '" ' +
+                'data-d="0">' +
+                  v.text +
+                ' </span>'
+              );
+            }
+          });
+          items.push('</p><p>');
+        });
+
+        items.push('</p></section></article>');
+
+        ht = items.join('');
+
+        // remove empty paras
+
+        ht = ht.split("<p></p>").join("");
+        
+        break;
         
       case 'google':
         var data = JSON.parse(input);
@@ -340,6 +390,7 @@ $(document).ready(function() {
 
         var currentOffset = 0;
         var wordCounter = 0;
+        var lastOutTime = 0;
 
         wds.forEach(function(wd) {
           // Add non-linked text
@@ -402,8 +453,14 @@ $(document).ready(function() {
             datad.value = '100'; // default duration when not known
           }
 
+          if (datam.value < lastOutTime) {
+            datam.value = lastOutTime + 1;
+          }
+
           word.setAttributeNode(datam);
           word.setAttributeNode(datad);
+
+          lastOutTime = parseInt(datam.value) + parseInt(datad.value);
 
           trans.appendChild(word);
           
